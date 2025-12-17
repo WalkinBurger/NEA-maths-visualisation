@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create account</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!--The top bar in the page that contains the home, help, & settings button-->
+    <div class="top-bar">
+        <button class="button-home" type="image"></button>
+        <button class="button-top" type="Button">Settings</button>
+        <button class="button-top" type="Button">Help</button>
+    </div>
+    <!--The actual login section-->
+    <div class="container">
+        <h1>Create Account</h1>
+        <hr>
+        <!--Input fields for logging in-->
+        <div class="account-container">
+            <div class="account-left">Username:</div>
+            <div class="account-right"><input type="text" class="form" placeholder="Enter username" required></div>
+            <div class="account-requirement">* Username must be with than 20 characters</div>
+            <div class="account-left">Password:</div>
+            <div class="account-right"><input type="password" class="form" placeholder="Enter password" required></div>
+            <div class="account-left">Re-enter password:</div>
+            <div class="account-right"><input type="password" class="form" placeholder="Re-enter password" required></div>
+            <div class="account-requirement">* Password must be between 8 to 30 characters, & must include special character, numbers, lowercase & uppercase</div>
+            <div class="account-left">User type:</div>
+            <div class="account-right" style="display: flex;">
+                <label style="padding-right: 20px;"><input type="radio" name="usertype" required>Student</label>
+                <label><input type="radio" name="usertype" required>Teacher</label>
+            </div>
+        </div>
+        <!--Buttons to login and create account-->
+        <div style="padding: 4px; margin: auto;"><button class="button1" type="submit">Create account</button></div>
+        <hr>
+        <div style="padding: 4px; margin: auto;"><button class="button1" type="button">Login to existing account</button></div>
+    </div>
+</body>
+</html>

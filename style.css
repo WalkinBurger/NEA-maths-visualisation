@@ -1,0 +1,140 @@
+/*root to declare colours to reference later as a colour palette*/
+:root {
+    --pc1: #133C55;
+    --pc2: #386FA4;
+    --pc3: #59A5D8;
+    --pc4: #b5d4e4;
+    --hl1: #d9dce4;
+    --hl2: #a6b3c0;
+    --hl3: #44535C;
+    --hl4: #243640;
+}
+
+/*elements selectors*/
+body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 18px;
+    margin: 0;
+    padding: 0;
+}
+h1 {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 42px;
+    font-weight: 400;
+    color: var(--pc1);
+    margin: auto;
+}
+hr {
+    width: 100%;
+    height: 2px;
+    background-color: var(--pc1);
+    border: none;
+}
+
+/*class selectors that would be use in most pages*/
+.top-bar {
+    width: auto;
+    height: 80px;
+    background-color: var(--pc1);
+}
+.button-home {
+    position: relative;
+    top: 50%;
+    transform: translateY(-58%);
+    margin-left: 20px;
+    width: 170px;
+    height: 54px;
+    background: url("src/logo.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.1s;
+}
+.button-home:hover {opacity: 0.75;}
+.button-home:active {opacity: 1;}
+.button-top {
+    position: relative;
+    margin-right: 20px;
+    padding: 10px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 20px;
+    float: right;
+    top: 50%;
+    height: 50px;
+    transform: translateY(-50%);
+    background: none;
+    color: var(--hl1);
+    border: none;
+    cursor: pointer;
+    transition: color 0.1s;
+}
+.button-top:hover {
+    text-decoration: underline;
+    color: var(--pc4);
+}
+
+/*login & signup page class selectors*/
+.container {
+    display: grid;
+    place-content: center;
+    height: 70vh;
+}
+.button1 {
+    background-color: white;
+    border: 1px solid var(--pc1);
+    border-radius: 7px;
+    padding: 7px 20px;
+    text-align: center;
+    color: var(--pc1);
+    font-size: 18px;
+    cursor: pointer;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    transition: background-color color 0.1s;
+}
+.button1:hover {background-color: whitesmoke;}
+.button1:active {
+    background-color: white;
+    color: var(--pc2);
+    border: 1px solid var(--pc2);
+}
+.form {
+    border: none;
+    box-sizing: border-box;
+    border-radius: 7px;
+    background-color: var(--hl1);
+    color: var(--hl4);
+    font-family: serif;
+    font-size: 18px;
+    padding-left: 7px;
+    height: 24px;
+    width: 300px;
+}
+.form:focus {
+    filter: brightness(0.9);
+    transition: 0.1s;
+}
+.account-container {
+    display: grid;
+    grid-template-rows: auto auto;
+    gap: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.account-left {
+    width: 90px;
+    grid-column: 1;
+    margin: auto;
+}
+.account-right {
+    grid-column: 2;
+    width: 300px;
+    margin: auto;
+}
+.account-requirement {
+    grid-column: 1 / span 2;
+    max-width: 400px;
+    font-style: italic;
+    font-size: 15px;
+    padding-bottom: 15px;
+}
