@@ -44,7 +44,7 @@ hr {
     margin-left: 20px;
     width: 170px;
     height: 54px;
-    background: url("src/logo.png");
+    background: url("assets/images/logo.png");
     background-repeat: no-repeat;
     background-size: contain;
     border: none;

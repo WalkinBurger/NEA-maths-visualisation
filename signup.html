@@ -11,30 +11,32 @@
         <button class="button-top" type="Button">Settings</button>
         <button class="button-top" type="Button">Help</button>
     </div>
-    <!--The actual login section-->
+    <!--The actual sign up section-->
     <div class="container">
         <h1>Create Account</h1>
         <hr>
-        <!--Input fields for logging in-->
-        <div class="account-container">
-            <div class="account-left">Username:</div>
-            <div class="account-right"><input type="text" class="form" placeholder="Enter username" required></div>
-            <div class="account-requirement">* Username must be with than 20 characters</div>
-            <div class="account-left">Password:</div>
-            <div class="account-right"><input type="password" class="form" placeholder="Enter password" required></div>
-            <div class="account-left">Re-enter password:</div>
-            <div class="account-right"><input type="password" class="form" placeholder="Re-enter password" required></div>
-            <div class="account-requirement">* Password must be between 8 to 30 characters, & must include special character, numbers, lowercase & uppercase</div>
-            <div class="account-left">User type:</div>
-            <div class="account-right" style="display: flex;">
-                <label style="padding-right: 20px;"><input type="radio" name="usertype" required>Student</label>
-                <label><input type="radio" name="usertype" required>Teacher</label>
+        <!--Input form for signing uo-->
+        <form>
+            <div class="account-container">
+                <label class="account-left">Username:</label>
+                <div class="account-right"><input type="text" class="form" placeholder="Enter username" required></div>
+                <label class="account-requirement">* Username must be with than 20 characters</label>
+                <label class="account-left">Password:</label>
+                <div class="account-right"><input type="password" class="form" placeholder="Enter password" required></div>
+                <label class="account-left">Re-enter password:</label>
+                <div class="account-right"><input type="password" class="form" placeholder="Re-enter password" required></div>
+                <label class="account-requirement">* Password must be between 8 to 30 characters, & must include special character, numbers, lowercase & uppercase</label>
+                <label class="account-left">User type:</label>
+                <div class="account-right" style="display: flex;">
+                    <label style="padding-right: 20px;"><input type="radio" name="usertype" required>Student</label>
+                    <label><input type="radio" name="usertype" required>Teacher</label>
+                </div>
             </div>
-        </div>
-        <!--Buttons to login and create account-->
-        <div style="padding: 4px; margin: auto;"><button class="button1" type="submit">Create account</button></div>
+            <div style="padding: 4px; margin: auto; max-width:fit-content;"><input class="button1" type="submit" value="Create account"></div>
+        </form>
+        <!--Button to go to the login page-->
         <hr>
-        <div style="padding: 4px; margin: auto;"><button class="button1" type="button">Login to existing account</button></div>
+        <div style="padding: 4px; margin: auto;"><button class="button1" type="button" onclick="location.href='login.html'">Login to existing account</button></div>
     </div>
 </body>
 </html>
