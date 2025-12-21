@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <!--The navigation bar at the top of the page-->
+    <nav>
+        <button class="nav-home" type="image" onclick="location.href='/'" title="Home page"></button>
+        <a class="nav-li" href="/settings" title="Settings page">Settings</a>
+        <a class="nav-li" href="/login" title="Help page">Help</a>
+    </nav>
+    
+    <!--The container for content in all other pages-->
+    <div class="container">{% block content %}{% endblock %}</div>
+    
+    <!--Flash message handling-->
+    {% with messages = get_flashed_messages(with_categories=false) %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="flash">
+                {{message}}
+                <button type="button" class="close" onclick="this.parentElement.style.display = 'none';" title="Close message">&times;</button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+</body>
+</html>
