@@ -1,21 +1,24 @@
-{% extends "base.html" %} {%block title %}Login{% endblock %}
+{% extends "base.html" %} {%block title %}Log in{% endblock %}
 {% block content %}
 <!--The login section-->
 <div class="container">
-    <h1>Account Login</h1>
+    <h1>Log in</h1>
     <hr>
     <!--Input form for logging in-->
     <form method="POST">
         <div class="form-container">
+            <!--Username-->
             <label class="form-left" for="username">Username:</label>
             <div class="form-right">
                 <input type="text" class="form" id="username" name="username" placeholder="Enter username" required>
             </div>
+            <!--Password-->
             <label class="form-left" for="password">Password:</label>
             <div class="form-right">
                 <input type="password" class="form" id="password" name="password" placeholder="Enter password" required>
             </div>
         </div>
+        <!--Login button-->
         <div style="padding: 4px; margin: auto; max-width:fit-content;"><input class="button1" type="submit" value="Login"></div>
     </form>
     <hr>

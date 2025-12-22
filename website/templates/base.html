@@ -2,12 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title %}Placeholder title{% endblock %}</title>
     <link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
     <!--The navigation bar at the top of the page-->
-    <nav>
+    <nav id="navBar">
+        {% block navlinks %}
+        <a class="nav-li" href="/settings" title="Settings page">Log in</a>
+        <a class="nav-li" href="/login" title="Help page">Create account</a>
+        {% endblock %}
         <button class="nav-home" type="image" onclick="location.href='/'" title="Home page"></button>
         <a class="nav-li" href="/settings" title="Settings page">Settings</a>
         <a class="nav-li" href="/login" title="Help page">Help</a>
