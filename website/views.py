@@ -47,21 +47,8 @@ def home():
 
 @views.route("/login", methods=["GET", "POST"])
 def login():
-    if not session.get("block"):
-        pass
-    elif session["block"] <= (datetime.datetime.now()).timestamp():
-        session["attempt"] = 4
-        session.pop("block")
-    else:
-        flash(f"You have attempted to log in too many times, please try again later.{session["attempt"], (datetime.datetime.now()).timestamp()}", category="error")
     # POST request to log in
-    if request.method == "POST" and not session.get("block"):
-        if not session.get("attempt"):
-            session["attempt"] = 4
-        elif session["attempt"] <= 1:
-            session["block"] = (datetime.datetime.now() + datetime.timedelta(seconds=10)).timestamp()
-            flash("You have attempted to log in too many times, please try again later.", category="error")
-            return render_template("login.html", user=current_user)
+    if request.method == "POST":
         # Get the account details from the form
         username = request.form.get("username")
         password = request.form.get("password")
@@ -83,8 +70,7 @@ def login():
                 except exceptions.VerifyMismatchError:
                     pass
             conn.close()
-        flash(f"Incorrect account details, please try again. (attempts remaining: {session["attempt"]-1})", category="error")
-        session["attempt"] -= 1
+        flash(f"Incorrect account details, please try again.", category="error")
     return render_template("login.html", user=current_user)
     
 
