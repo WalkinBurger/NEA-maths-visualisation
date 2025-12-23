@@ -1,9 +1,14 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, session
+from flask import Blueprint, render_template, request, flash, redirect, url_for, session, abort
 from flask_login import login_user, login_required, logout_user, current_user, UserMixin
+from functools import wraps
 import sqlite3
 import datetime
+import sys
 from argon2 import PasswordHasher, exceptions
 ph = PasswordHasher()
+
+def sprint(msg, colour=0):
+    print(f"\033[{colour}m{msg}\033[0m")
 
 # User class model for flask-login
 class User(UserMixin):
@@ -12,15 +17,32 @@ class User(UserMixin):
         cursor = conn.cursor()
         if username:
             user = cursor.execute("SELECT * FROM users WHERE username=?", (username,)).fetchone()
-        else:
-            user = cursor.execute("SELECT * FROM users WHERE userId=?", (id,)).fetchone()
+        if not user:
+            if id:
+                user = cursor.execute("SELECT * FROM users WHERE userId=?", (id,)).fetchone()
+            else:
+                user = cursor.execute("SELECT * FROM users WHERE userId=?", (username,)).fetchone()
         conn.close()
         if user:
             # Initialises attributes if the user exists in the database
             self.id = user[0]
             self.username =  user[1]
             self.passwordHash= user[2]
-            self.userType = user[3]
+            self.role = user[3]
+
+# Role base access method
+def role_required(*role):
+    def wrapper(func):
+        @wraps(func)
+        def decorated_view(*args, **kwargs):
+            if not hasattr(current_user, "role"):
+                return abort(403)
+            elif current_user.role not in role:
+                return abort(403)
+            return func(*args, **kwargs)
+        return decorated_view
+    return wrapper
+
 
 def validation(username, password):
     specialChar = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
@@ -43,30 +65,33 @@ views = Blueprint("views", __name__)
 
 @views.route("/")
 def home():
-    return render_template("index.html", user=current_user)
+    if hasattr(current_user, "role"):
+        user_type = current_user.role
+    else:
+        user_type = "anon"
+    sprint(user_type, 43)
+    return render_template("index.html", user=current_user, user_type=user_type)
 
 @views.route("/login", methods=["GET", "POST"])
 def login():
+    # Limit attempts to 3 incorrect attempts
+    if session.get("attempt") == None:
+            session["attempt"] = 4
+    elif session["attempt"] == 1 and not session.get("block"):
+        session["block"] = datetime.datetime.now() + datetime.timedelta(minutes=10)
     # 'block' cookie in session to block user who attempted to log in too many times
     if not session.get("block"):
         pass
-    elif session["block"] <= (datetime.datetime.now()).timestamp():
+    elif session["block"].replace(tzinfo=None) <= (datetime.datetime.now()):
         session["attempt"] = 4
         session.pop("block")
     else:
         flash("You have attempted to log in too many times, please try again later.", category="error")
     # POST request to log in
     if request.method == "POST" and not session.get("block"):
-        if not session.get("attempt"):
-            session["attempt"] = 4
-        elif session["attempt"] <= 1:
-            session["block"] = (datetime.datetime.now() + datetime.timedelta(seconds=10)).timestamp()
-            flash("You have attempted to log in too many times, please try again later.", category="error")
-            return render_template("login.html", user=current_user)
         # Get the account details from the form
         username = request.form.get("username")
         password = request.form.get("password")
-
         # Password & username validation
         if validation(username, password) == True:
             conn = sqlite3.connect("database.db")
@@ -78,14 +103,20 @@ def login():
                 try:# Correct password
                     ph.verify(user_query[2], password)
                     conn.close()
-                    user = User(username)
+                    user = User(username=username)
                     login_user(user, remember=True)
                     return redirect(url_for("views.home"))
                 except exceptions.VerifyMismatchError:
                     pass
             conn.close()
-        flash(f"Incorrect account details, please try again. (attempts remaining: {session["attempt"]-1})", category="error")
         session["attempt"] -= 1
+        if session["attempt"] != 0:
+            flash(f"Incorrect account details, please try again. (attempts remaining: {session["attempt"]-1})", category="error")
+    for i in session.items():
+        if i[0] == "attempt":
+            print(f"\033[46m{i}\033[0m")
+        elif i[0] == "block":
+            print(f"\033[45m{i}\033[0m")
     return render_template("login.html", user=current_user)
     
 
@@ -117,7 +148,7 @@ def signup():
                 (username, ph.hash(password1), usertype))
                 conn.commit()
                 conn.close()
-                user = User(username)
+                user = User(username=username)
                 login_user(user, remember=True)
                 flash("Account successfully created", category="success")
                 return redirect(url_for("views.home"))
@@ -128,3 +159,13 @@ def signup():
 def logout():
     logout_user()
     return redirect(url_for("views.login"))
+
+@views.route("/dashboard")
+@login_required
+@role_required("admin")
+def dashboard():
+    return render_template("dashboard.html", user=current_user)
+
+@views.errorhandler(403)
+def error403(error):
+    return render_template("403.html", user=current_user), 403
