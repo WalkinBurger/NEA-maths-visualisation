@@ -1,40 +1,38 @@
 {% extends "base.html" %} {%block title %}Create account{% endblock %}
 {% block content %}
 <!--The sign up section-->
-<div class="container">
-    <h1>Create account</h1>
-    <hr>
-    <!--Input form for signing uo-->
-    <form method="POST">
-        <div class="form-container">
-            <!--Username-->
-            <label class="form-left" for="username">Username:</label>
-            <div class="form-right">
-                <input type="text" class="form" id="username" name="username" placeholder="Enter username" required>
-            </div>
-            <label class="form-requirement" for="username">* Username must be with than 20 characters</label>
-            <!--Password-->
-            <label class="form-left" for="password1">Password:</label>
-            <div class="form-right">
-                <input type="password" class="form" id="password1" name="password1" placeholder="Enter password" required>
-            </div>
-            <label class="form-left" for="password2">Confirm password:</label>
-            <div class="form-right">
-                <input type="password" class="form" id="password2" name="password2" placeholder="Re-enter password" required>
-            </div>
-            <label class="form-requirement" for="password1 password2">* Password must be between 8 to 30 characters, & must include special character, numbers, lowercase & uppercase</label>
-            <!--User type-->
-            <label class="form-left" for="usertype">User type:</label>
-            <div class="form-right" style="display: flex;">
-                <label style="padding-right: 20px;"><input type="radio" id="usertype" name="usertype" required value="student">Student</label>
-                <label><input type="radio" id="usertype" name="usertype" required value="teacher">Teacher</label>
-            </div>
+<h1>Create account</h1>
+<hr>
+<!--Input form for signing uo-->
+<form method="POST">
+    <div class="form-container">
+        <!--Username-->
+        <label class="form-left" for="username">Username:</label>
+        <div class="form-right">
+            <input type="text" class="form" id="username" name="username" placeholder="Enter username" required>
         </div>
-        <!--Create account button-->
-        <div style="padding: 4px; margin: auto; max-width:fit-content;"><input class="button1" type="submit" value="Create account"></div>
-    </form>
-    <!--Button to go to the login page-->
-    <hr>
-    <div style="padding: 4px; margin: auto;"><button class="button1" type="button" onclick="location.href='/login'">Login to existing account</button></div>
-</div>
+        <label class="form-requirement" for="username">* Username must be with than 20 characters</label>
+        <!--Password-->
+        <label class="form-left" for="password1">Password:</label>
+        <div class="form-right">
+            <input type="password" class="form" id="password1" name="password1" placeholder="Enter password" required>
+        </div>
+        <label class="form-left" for="password2">Confirm password:</label>
+        <div class="form-right">
+            <input type="password" class="form" id="password2" name="password2" placeholder="Re-enter password" required>
+        </div>
+        <label class="form-requirement" for="password1 password2">* Password must be between 8 to 30 characters, & must include special character, numbers, lowercase & uppercase</label>
+        <!--User type-->
+        <label class="form-left" for="usertype">User type:</label>
+        <div class="form-right" style="display: flex;">
+            <label style="padding-right: 20px;"><input type="radio" id="usertype" name="usertype" required value="student">Student</label>
+            <label><input type="radio" id="usertype" name="usertype" required value="teacher">Teacher</label>
+        </div>
+    </div>
+    <!--Create account button-->
+    <div style="padding: 4px; margin: auto; max-width:fit-content;"><input class="button1" type="submit" value="Create account"></div>
+</form>
+<!--Button to go to the login page-->
+<hr>
+<div style="padding: 4px; margin: auto;"><button class="button1" type="button" onclick="location.href='/login'">Login to existing account</button></div>
 {% endblock %}

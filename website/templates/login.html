@@ -1,28 +1,26 @@
 {% extends "base.html" %} {%block title %}Log in{% endblock %}
 {% block content %}
 <!--The login section-->
-<div class="container">
-    <h1>Log in</h1>
-    <hr>
-    <!--Input form for logging in-->
-    <form method="POST">
-        <div class="form-container">
-            <!--Username-->
-            <label class="form-left" for="username">Username:</label>
-            <div class="form-right">
-                <input type="text" class="form" id="username" name="username" placeholder="Enter username" required>
-            </div>
-            <!--Password-->
-            <label class="form-left" for="password">Password:</label>
-            <div class="form-right">
-                <input type="password" class="form" id="password" name="password" placeholder="Enter password" required>
-            </div>
+<h1>Log in</h1>
+<hr>
+<!--Input form for logging in-->
+<form method="POST">
+    <div class="form-container">
+        <!--Username-->
+        <label class="form-left" for="username">Username:</label>
+        <div class="form-right">
+            <input type="text" class="form" id="username" name="username" placeholder="Enter username" required>
         </div>
-        <!--Login button-->
-        <div style="padding: 4px; margin: auto; max-width:fit-content;"><input class="button1" type="submit" value="Login"></div>
-    </form>
-    <hr>
-    <!--Buttons to go to the sign up page-->
-    <div style="padding: 4px; margin: auto;"><button class="button1" type="button" onclick="location.href='/signup'">Create account</button></div>
-</div>
+        <!--Password-->
+        <label class="form-left" for="password">Password:</label>
+        <div class="form-right">
+            <input type="password" class="form" id="password" name="password" placeholder="Enter password" required>
+        </div>
+    </div>
+    <!--Login button-->
+    <div style="padding: 4px; margin: auto; max-width:fit-content;"><input class="button1" type="submit" value="Login"></div>
+</form>
+<hr>
+<!--Buttons to go to the sign up page-->
+<div style="padding: 4px; margin: auto;"><button class="button1" type="button" onclick="location.href='/signup'">Create account</button></div>
 {% endblock %}

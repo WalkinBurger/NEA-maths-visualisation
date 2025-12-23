@@ -1,6 +1,6 @@
 from website import *
 
-init_db()
+init_db
 app = create_app()
 
 if __name__ == '__main__':

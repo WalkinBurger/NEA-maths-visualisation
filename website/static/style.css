@@ -1,8 +1,8 @@
 /*root to declare colours to reference later as a colour palette*/
 :root {
     --pc1: #133C55;
-    --pc2: #386FA4;
-    --pc3: #59A5D8;
+    --pc2: #436c86;
+    --pc3: #82b1d1;
     --pc4: #b5d4e4;
     --hl1: #d9dce4;
     --hl2: #a6b3c0;
@@ -99,8 +99,6 @@ nav {
 .flash {
     position: absolute;
     top: 4em;
-    background-color: var(--hl1);
-    color: var(--hl3);
     height: 3em;
     width: 100%;
     display: flex;
