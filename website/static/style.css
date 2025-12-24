@@ -1,13 +1,12 @@
 /*root to declare colours to reference later as a colour palette*/
 :root {
-    --pc1: #133C55;
-    --pc2: #436c86;
-    --pc3: #82b1d1;
-    --pc4: #b5d4e4;
+    --pc1: #286983;
+    --pc2: #56949f;
+    --pc3: #9ccfd8;
     --hl1: #d9dce4;
-    --hl2: #a6b3c0;
-    --hl3: #44535C;
-    --hl4: #243640;
+    --hl2: #dfdad9;
+    --hl3: #575279;
+    --hl4: #2a283e;
 }
 
 /*elements selectors*/
@@ -71,7 +70,7 @@ nav {
 }
 .nav-li:hover {
     text-decoration: underline;
-    color: var(--pc4);
+    color: var(--pc3);
 }
 .container {
     display: grid;
@@ -103,12 +102,11 @@ nav {
     width: 100%;
     display: flex;
     align-items: center;
-    padding-left: 16px;
 }
 .close {
     position: absolute;
     left: 100%;
-    transform: translateX(-3em);
+    transform: translateX(-2.4em);
     background: none;
     border: none;
     cursor: pointer;

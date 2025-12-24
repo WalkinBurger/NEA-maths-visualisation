@@ -69,7 +69,6 @@ def home():
         user_type = current_user.role
     else:
         user_type = "anon"
-    sprint(user_type, 43)
     return render_template("index.html", user=current_user, user_type=user_type)
 
 @views.route("/login", methods=["GET", "POST"])
@@ -105,6 +104,7 @@ def login():
                     conn.close()
                     user = User(username=username)
                     login_user(user, remember=True)
+                    session["attempt"] = 4
                     return redirect(url_for("views.home"))
                 except exceptions.VerifyMismatchError:
                     pass
@@ -112,11 +112,6 @@ def login():
         session["attempt"] -= 1
         if session["attempt"] != 0:
             flash(f"Incorrect account details, please try again. (attempts remaining: {session["attempt"]-1})", category="error")
-    for i in session.items():
-        if i[0] == "attempt":
-            print(f"\033[46m{i}\033[0m")
-        elif i[0] == "block":
-            print(f"\033[45m{i}\033[0m")
     return render_template("login.html", user=current_user)
     
 
@@ -130,7 +125,6 @@ def signup():
         password2 = request.form.get("password2")
         usertype = request.form.get("usertype")
 
-
         # Password & username validation
         if validation(username, password1) != True:
             flash(validation(username, password1), category="error")
@@ -139,7 +133,7 @@ def signup():
         else: # Valid sign up
             conn = sqlite3.connect("database.db")
             cursor = conn.cursor()
-            # Create account if username does not existD
+            # Create account if username does not exist
             if cursor.execute("SELECT username FROM users WHERE username=?", (username,)).fetchone():
                 flash("This username already exists.", category="error")
                 conn.close()

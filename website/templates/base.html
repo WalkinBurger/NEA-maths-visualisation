@@ -25,13 +25,13 @@
     {% if messages %}
         {% for category, message in messages %}
             {% if category == "error" %}
-            <div class="flash" style="background-color:lightpink; color: var(--hl3);">
+            <div class="flash" style="background-color:#ebbcba; color: var(--hl3);">
             {% elif category == "success" %}
             <div class="flash" style="background-color: var(--pc3); color: var(--hl4);">
             {% else %}
             <div class="flash" style="background-color: var(--hl1); color: var(--hl3);">
             {% endif %}
-                {{message}}
+                <label style="padding-left: 16px;">{{message}}</label>
                 <button type="button" class="close" onclick="this.parentElement.style.display = 'none';" title="Close message">&times;</button>
             </div>
         {% endfor %}
