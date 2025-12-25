@@ -1,4 +1,4 @@
-/*root to declare colours to reference later as a colour palette*/
+/* ========== Root to declare colours to reference later as a colour palette ========== */
 :root {
     --pc1: #286983;
     --pc2: #56949f;
@@ -9,31 +9,12 @@
     --hl4: #2a283e;
 }
 
-/*elements selectors*/
-body {
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: 18px;
-    margin: 0;
-    padding: 0;
-}
-h1 {
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: 42px;
-    font-weight: 400;
-    color: var(--pc1);
-    margin: auto;
-}
-hr {
-    width: 100%;
-    height: 2px;
-    background-color: var(--pc1);
-    border: none;
-}
-
-/*base class selectors that would be use in most pages*/
+/* ========== Base class selectors that would be use in most pages ========== */
 * {
   box-sizing: border-box;
 }
+
+/* Nav bar */
 .nav {
     display: flex;
     width: auto;
@@ -49,8 +30,8 @@ hr {
     background: url("./images/logo.png");
     background-repeat: no-repeat;
     background-size: contain;
-    border: none;
     cursor: pointer;
+    border: none;
     transition: opacity 0.1s;
 }
 .nav button.home:hover {opacity: 0.75;}
@@ -65,9 +46,12 @@ hr {
     font-size: 20px;
     color: var(--hl1);
     cursor: pointer;
-    transition: color 0.1s,;
+    transition: color 0.1s;
 }
 .nav a:hover {text-decoration: underline; color: var(--pc3);}
+.nav a:active {text-decoration: underline; color: var(--pc3);}
+
+/* Expand nav bar */
 .nav button.menu div.menu-bar{
     background-color: var(--hl1);
     width: 24px;
@@ -87,44 +71,80 @@ hr {
     margin: 10px 10px;
 }
 .nav button.menu:hover {filter: brightness(1.1);}
-div.responsive button.menu {outline: 2px solid var(--pc2);}
 div.expand {
     position: absolute;
-    width: 100%;
+    width: 70%;
     right: 0%;
     transition: height 0.3s;
     overflow: hidden;
 }
+
+/* Responsive breakpoint for nav bar on smaller devices*/
+div.responsive button.menu {outline: 2px solid var(--pc2);}
 div.responsive {
     height: 16em;
 }
 div.responsive > div.expand {
+    border-top: 1px solid var(--hl3);
     height: 12em;
     display: grid;
     top: 4em;
-    grid-template-columns: 100%;
+    grid-template-columns: 50%;
 }
 @media screen and (max-width: 700px) {
     .nav button.menu {
         display: block;
     }
     div.expand {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 50%;
         background-color: var(--pc2);
         height: 0em;
         top: 4em;
+    }
+    .nav a {
+        text-align: left;
+        padding-top: 15px;
+        padding-bottom: 0px;
+        height: 0px;
     }
     div.responsive a {
         display: flex;
         padding-top: 15px;
         padding-bottom: 10px;
+        height: auto;
         text-align: left;
     }
 }
+/* General elements */
+body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 18px;
+    margin: 0;
+    padding: 0;
+}
+h1 {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 42px;
+    font-weight: 400;
+    color: var(--pc1);
+    margin: auto;
+    text-align: center;
+    margin-top: 2em;
+}
+hr {
+    width: 100%;
+    height: 2px;
+    background-color: var(--pc1);
+    border: none;
+}
 .container {
     display: grid;
-    place-content: center;
-    height: 92vh;
-    /* border: 4px solid #2a283e; */
+    height: auto;
+    justify-content: center;
+    overflow-x: scroll;
+    margin: 4em 2em;
 }
 .button1 {
     background-color: white;
@@ -144,13 +164,17 @@ div.responsive > div.expand {
     color: var(--pc2);
     border: 1px solid var(--pc2);
 }
+
+/* Flash message */
 .flash {
-    position: absolute;
-    top: 4em;
+    position: relative;
+    transition: height 0.3s;
     height: 3em;
     width: 100%;
     display: flex;
     align-items: center;
+    border-top: 1px solid var(--hl3);
+    overflow: hidden;
 }
 .close {
     position: absolute;
@@ -167,8 +191,19 @@ div.responsive > div.expand {
     opacity: 0.75
 }
 .close:hover {opacity: 1;}
-
-/*login & signup page class selectors*/
+/* Responsive breakpoint for general elements on smaller devices*/
+@media screen and (max-width: 500px) {
+    h1 {
+        margin-top: 1em;
+    }
+    hr {
+        width: 90%;
+    }
+}
+    
+    
+    
+/* ========== Login & signup page class selectors ========== */
 .form {
     border: none;
     box-sizing: border-box;
@@ -177,9 +212,9 @@ div.responsive > div.expand {
     color: var(--hl4);
     font-family: serif;
     font-size: 18px;
-    padding-left: 7px;
-    height: 24px;
-    width: 300px;
+padding-left: 7px;
+height: 24px;
+width: 300px;
 }
 .form:focus {
     filter: brightness(0.9);
@@ -201,6 +236,7 @@ div.responsive > div.expand {
     grid-column: 2;
     width: 300px;
     margin: auto;
+    justify-content: center;
 }
 .form-requirement {
     grid-column: 1 / span 2;
@@ -208,4 +244,28 @@ div.responsive > div.expand {
     font-style: italic;
     font-size: 15px;
     padding-bottom: 15px;
+}
+/* Responsive breakpoint for input form on smaller devices*/
+@media screen and (max-width: 500px) {
+    .form-left {
+        width: auto;
+        grid-column: 1 / span 2;
+        margin: auto;
+    }
+    .form-right {
+        grid-column: 1 / span 2;
+        width: auto;
+        margin: auto 15px;
+    }
+    .form {
+        padding-left: 7px;
+        height: 24px;
+        width: 100%;
+    }
+    .form-requirement {
+        font-style: italic;
+        font-size: 15px;
+        padding-bottom: 15px;
+        margin: auto 15px;
+    }
 }

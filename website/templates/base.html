@@ -21,10 +21,8 @@
         <button class="menu"title="Expand Menu" onclick="expandMenu()"><div class="menu-bar"></div><div class="menu-bar"></div><div class="menu-bar"></div></button>    
     </div>
     
-    <!--The container for content in all other pages-->
-    <div class="container">{% block content %}{% endblock %}</div>
-    
     <!--Flash message handling-->
+    <div style="overflow: hidden;">
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         {% for category, message in messages %}
@@ -36,12 +34,19 @@
             <div class="flash" style="background-color: var(--hl1); color: var(--hl3);">
             {% endif %}
                 <label style="padding-left: 16px;">{{message}}</label>
-                <button type="button" class="close" onclick="this.parentElement.style.display = 'none';" title="Close message">&times;</button>
+                <button type="button" class="close" onclick="closeMessage(this.parentElement)" title="Close message">&times;</button>
             </div>
         {% endfor %}
     {% endif %}
     {% endwith %}
+    </div>
+
+    <!--The container for content in all other pages-->
+    <div class="container">{% block content %}{% endblock %}</div>
+
     <script>
+        const delay = ms => new Promise(res => setTimeout(res, ms));
+
         function expandMenu() {
             var nav = document.getElementById("navBar");
             if (nav.className === "nav") {
@@ -50,6 +55,12 @@
                 nav.className = "nav";
             }
         } 
+
+        closeMessage = async (message) => {
+            message.style.height = '0em';
+            await delay(300)
+            message.remove()
+        }
     </script>
 </body>
 </html>
