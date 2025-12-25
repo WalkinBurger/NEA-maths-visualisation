@@ -2,20 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Placeholder title{% endblock %}</title>
     <link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
     <!--The navigation bar at the top of the page-->
-    <nav id="navBar">
-        {% if not user.is_authenticated %}
-        <a class="nav-li" href="/login" title="Settings page">Log in</a>
-        <a class="nav-li" href="/signup" title="Help page">Create account</a>
-        {% endif %}
-        <button class="nav-home" type="image" onclick="location.href='/'" title="Home page"></button>
-        <a class="nav-li" href="/settings" title="Settings page">Settings</a>
-        <a class="nav-li" href="/help" title="Help page">Help</a>
-    </nav>
+    <div class="nav" id="navBar">
+        <div class="expand">
+            {% if not user.is_authenticated %}
+            <a href="/login" title="Log in to your account">Log in</a>
+            <a href="/signup" title="Create an account">Create account</a>
+            {% endif %}
+            <a href="/settings" title="Settings page">Settings</a>
+            <a href="/help" title="Help page">Help</a>
+        </div>
+        <button class="home" type="image" onclick="location.href='/'" title="Home page"></button>
+        <button class="menu"title="Expand Menu" onclick="expandMenu()"><div class="menu-bar"></div><div class="menu-bar"></div><div class="menu-bar"></div></button>    
+    </div>
     
     <!--The container for content in all other pages-->
     <div class="container">{% block content %}{% endblock %}</div>
@@ -37,5 +41,15 @@
         {% endfor %}
     {% endif %}
     {% endwith %}
+    <script>
+        function expandMenu() {
+            var nav = document.getElementById("navBar");
+            if (nav.className === "nav") {
+                nav.className += " responsive";
+            } else {
+                nav.className = "nav";
+            }
+        } 
+    </script>
 </body>
 </html>
