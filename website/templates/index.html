@@ -6,19 +6,21 @@
 <input type="text" class="search" placeholder="&#8981;  Search topics">
 <hr>
 </div>
+<!-- Topic lists displayed as a expandable/collapsible tree list -->
 <div id="container-topics">
     {% for topic in topics%}
-        {% if topic[1] == 0 %}
+        {% if topic[1] == 0 %} <!-- Topic heading, eg: "GCSE", "A Level" -->
             <button class="depth{{topic[1]}} category" onclick="expandTopic(this)"><li class="topic-li">{{topic[0]}}</li></button>
             <hr>
-        {% elif topic[2] is undefined %}
-            <button style="margin-left: {{2*(topic[1])}}em;" class="depth{{topic[1]}} sub category" onclick="expandTopic(this)"><li class="topic-li">{{topic[0]}}</li></button>
-        {% else %}
-            <a style="margin-left: {{2*(topic[1])}}em;" class="depth{{topic[1]}} sub topic-link" href="/topic/{{topic[2]}}"><li style="list-style: circle outside;">{{topic[0]}}</li></a>
+        {% elif topic[2] is undefined %} <!-- Sub-topics (categories) -->
+            <button style="margin-left: {{1.5*(topic[1])}}em;" class="depth{{topic[1]}} sub category" onclick="expandTopic(this)"><li class="topic-li">{{topic[0]}}</li></button>
+        {% else %} <!-- Links to the actual topic resources -->
+            <a style="margin-left: {{1.5*(topic[1])}}em;" class="depth{{topic[1]}} sub topic-link" href="/topic/{{topic[2]}}"><li style="list-style: circle outside;">{{topic[0]}}</li></a>
         {% endif %}
     {% endfor %}
 </div>
 <script>
+    // Function to expand/collapse the list whenever it is clicked
     function expandTopic(x) {
         // Get all sub-topics
         var sibs = [], child = [], elem = x.nextElementSibling
@@ -36,7 +38,7 @@
                     child[i].firstChild.classList.toggle("rotated")
                 }
                 child[i].style.height = null;
-                child[i].style.transform = "translateX(-100px) scale(0.1)";
+                child[i].style.transform = "translateX(-75px) scale(0)";
             }
         }
         // Collaspe all levels

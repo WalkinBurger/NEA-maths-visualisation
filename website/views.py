@@ -5,6 +5,7 @@ import sqlite3
 import datetime
 import sys
 import os
+import pprint
 from argon2 import PasswordHasher, exceptions
 ph = PasswordHasher()
 
@@ -74,7 +75,7 @@ def home():
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
     topics = cursor.execute("SELECT * FROM topics ORDER BY path DESC").fetchall()
-    # Format topics into a flatten dictionary
+    # Format topics into a flatten 2D array
     topics_flatten = []
     for topicId, topicName, path in topics:
         for i,category in enumerate(path.split('/')):

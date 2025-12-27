@@ -338,7 +338,7 @@ div.responsive > div.expand {
 .sub {
     overflow: hidden;
     height: 0px;
-    transform: translateX(-100px) scale(0.1);
+    transform: translateX(-75px) scale(0);
     transition: height 0.2s, padding-top 0.2s, transform 0.3s;
 }
 .topic-li {
