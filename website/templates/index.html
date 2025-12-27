@@ -1,5 +1,53 @@
-{% extends "base.html" %} {%block title %}Log in{% endblock %}
+{% extends "base.html" %} {%block title %}Home{% endblock %}
 {% block content %}
 <!--The login section-->
-<h1>Home page</h1>
+<div style="width: min-content; margin: auto;">
+<h1>Maths Visualisation</h1>
+<input type="text" class="search" placeholder="&#8981;  Search topics">
+<hr>
+</div>
+<div id="container-topics">
+    {% for topic in topics%}
+        {% if topic[1] == 0 %}
+            <button class="depth{{topic[1]}} category" onclick="expandTopic(this)"><li class="topic-li">{{topic[0]}}</li></button>
+            <hr>
+        {% elif topic[2] is undefined %}
+            <button style="margin-left: {{2*(topic[1])}}em;" class="depth{{topic[1]}} sub category" onclick="expandTopic(this)"><li class="topic-li">{{topic[0]}}</li></button>
+        {% else %}
+            <a style="margin-left: {{2*(topic[1])}}em;" class="depth{{topic[1]}} sub topic-link" href="/topic/{{topic[2]}}"><li style="list-style: circle outside;">{{topic[0]}}</li></a>
+        {% endif %}
+    {% endfor %}
+</div>
+<script>
+    function expandTopic(x) {
+        // Get all sub-topics
+        var sibs = [], child = [], elem = x.nextElementSibling
+        var depth = parseInt(x.className[5])
+        while (elem && elem.parentElement == x.parentElement && !(elem.className[5] == depth)){
+            if (elem.className[5] == (depth+1)) {sibs.push(elem);}
+            if (parseInt(elem.className[5]) >= (depth+1)) {child.push(elem);}
+            elem = elem.nextElementSibling
+        }
+        // Expand next level
+        if (x.classList.contains("expanded")) {
+            for (let i = 0; i < child.length; i++) {
+                if (child[i].classList.contains("expanded")) {
+                    child[i].classList.toggle("expanded")
+                    child[i].firstChild.classList.toggle("rotated")
+                }
+                child[i].style.height = null;
+                child[i].style.transform = "translateX(-100px) scale(0.1)";
+            }
+        }
+        // Collaspe all levels
+        else {
+            for (let i = 0; i < sibs.length; i++) {
+                sibs[i].style.height = sibs[i].scrollHeight+5 + 'px';
+                sibs[i].style.transform = "translateX(0px) scale(1)";
+            }
+        }
+        x.firstChild.classList.toggle("rotated")
+        x.classList.toggle("expanded")
+    } 
+</script>
 {% endblock %}

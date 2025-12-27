@@ -4,6 +4,7 @@ from functools import wraps
 import sqlite3
 import datetime
 import sys
+import os
 from argon2 import PasswordHasher, exceptions
 ph = PasswordHasher()
 
@@ -43,7 +44,6 @@ def role_required(*role):
         return decorated_view
     return wrapper
 
-
 def validation(username, password):
     specialChar = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
     if len(username) > 20:
@@ -65,11 +65,24 @@ views = Blueprint("views", __name__)
 
 @views.route("/")
 def home():
+    # Anonymous user role if user is not logged in
     if hasattr(current_user, "role"):
         user_type = current_user.role
     else:
         user_type = "anon"
-    return render_template("index.html", user=current_user, user_type=user_type)
+    # Query all topics
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+    topics = cursor.execute("SELECT * FROM topics ORDER BY path DESC").fetchall()
+    # Format topics into a flatten dictionary
+    topics_flatten = []
+    for topicId, topicName, path in topics:
+        for i,category in enumerate(path.split('/')):
+            if category[-5:] == ".html":
+                topics_flatten.append([topicName, i, topicId])
+            elif not [category, i] in topics_flatten:
+                topics_flatten.append([category, i])
+    return render_template("index.html", user=current_user, user_type=user_type, topics=topics_flatten)
 
 @views.route("/login", methods=["GET", "POST"])
 def login():
@@ -154,6 +167,14 @@ def logout():
     logout_user()
     return redirect(url_for("views.login"))
 
+@views.route("topic/<int:topicId>")
+@login_required
+def topic(topicId):
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+    path = cursor.execute("SELECT path FROM topics WHERE topicId=?", (topicId,)).fetchone()[0]
+    return render_template(f"resources/{path}", user=current_user)
+
 @views.route("/dashboard")
 @login_required
 @role_required("admin")
@@ -162,4 +183,4 @@ def dashboard():
 
 @views.errorhandler(403)
 def error403(error):
-    return render_template("403.html", user=current_user), 403
+    return render_template("errors/403.html", user=current_user), 403

@@ -8,12 +8,21 @@ def init_db():
     # Init database
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
+    # Users table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
             userId INTEGER PRIMARY KEY,
             username TEXT NOT NULL,
             passwordHash TEXT NOT NULL,
             userType TEXT NOT NULL
+        )
+    ''')
+    # Topics table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS topics (
+            topicId INTEGER PRIMARY KEY,
+            topicName TEXT NOT NULL,
+            path TEXT NOT NULL
         )
     ''')
     conn.commit()
