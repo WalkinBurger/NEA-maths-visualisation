@@ -3,9 +3,7 @@
 <!--The login section-->
 <div style="width: min-content; margin: auto;">
 <h1>Maths Visualisation</h1>
-<form>
-<input type="text" class="search" placeholder="&#8981;  Search topics" name="q">
-</form>
+<input type="text" class="search" placeholder="&#8981;  Search topics" onkeyup="searchBar(this.value)">
 <hr>
 </div>
 <!-- Topic lists displayed as a expandable/collapsible tree list -->
@@ -32,7 +30,7 @@
             if (parseInt(elem.className[5]) >= (depth+1)) {child.push(elem);}
             elem = elem.nextElementSibling
         }
-        // Expand next level
+        // Collaspe all levels
         if (x.classList.contains("expanded")) {
             for (let i = 0; i < child.length; i++) {
                 if (child[i].classList.contains("expanded")) {
@@ -40,18 +38,64 @@
                     child[i].firstChild.classList.toggle("rotated")
                 }
                 child[i].style.height = null;
-                child[i].style.transform = "translateX(-75px) scale(0)";
+                child[i].style.transform = "translateX(-75px) scale(0)"
             }
         }
-        // Collaspe all levels
+        // Expand next level
         else {
             for (let i = 0; i < sibs.length; i++) {
-                sibs[i].style.height = sibs[i].scrollHeight+5 + 'px';
-                sibs[i].style.transform = "translateX(0px) scale(1)";
+                sibs[i].style.height = "1.5em"
+                sibs[i].style.transform = "translateX(0px) scale(1)"
             }
         }
         x.firstChild.classList.toggle("rotated")
         x.classList.toggle("expanded")
     } 
+    // Search bar function
+    function searchBar(q) {
+        var topics = document.getElementById("container-topics").children
+        // Reset and collapse every topic before searching
+        for (let i = 0; i < topics.length; i++) {
+            if (topics[i].tagName == "HR") {topics[i].style.width = '100%'}
+            else if (topics[i].className[5] == '0') {
+                topics[i].style.marginTop = "1em"
+                topics[i].style.height = "1.5em"
+                if (topics[i].classList.contains("expanded")) {expandTopic(topics[i])}
+            } else {topics[i].style.height = "0px"}}
+        if (q == "") {return}
+        // When search is not empty
+        let filtered = []
+        for (let i = 0; i < topics.length; i++) {
+            if (topics[i].tagName != 'A' && topics[i].tagName != "BUTTON") {continue}
+            // If topic matches with search
+            if (topics[i].textContent.toLowerCase().includes(q.toLowerCase())) {
+                filtered.push(topics[i])
+                // Get all the parent topics of that topic
+                let j = i-1, k = parseInt(topics[i].className[5])-1
+                while (j > -1 && k > -1) {
+                    if (parseInt(topics[j].className[5]) == k || topics[j].tagName == "HR") {
+                        if (!filtered.includes(topics[j])) {filtered.push(topics[j])}
+                        if (topics[j].tagName != "HR") {k--}} j--}
+                // Get all the child topics of that topic
+                if ((topics[i].tagName == "BUTTON")) {
+                    let j = i+1, k = parseInt(topics[i].className[5])
+                    while (j < topics.length) {
+                        if (parseInt(topics[j].className[5]) > k || topics[j].tagName == "HR") {
+                            if (!filtered.includes(topics[j])) {filtered.push(topics[j])}
+                            j++
+                        } else {break}}}}}
+        // Display the filtered topics
+        for (let i = 0; i < topics.length; i++) {
+            if (!filtered.includes(topics[i])) {
+                if (topics[i].tagName == "HR") {topics[i].style.width = "0%"}
+                else {
+                    topics[i].style.height = '0px'
+                    topics[i].style.marginTop = '0px'
+                }
+            } else if (topics[i].tagName == "BUTTON") {
+                expandTopic(topics[i])
+            }
+        }
+    }
 </script>
 {% endblock %}

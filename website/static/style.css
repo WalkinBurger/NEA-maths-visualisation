@@ -48,6 +48,8 @@ hr {
     height: 2px;
     background-color: var(--pc1);
     border: none;
+    overflow: hidden;
+    transition: width 0.3s;
 }
 .container {
     display: grid;
@@ -319,9 +321,12 @@ div.responsive > div.expand {
     cursor: pointer;
 }
 .depth0 {
-    padding-top: 1em;
+    height: 1.5em;
+    overflow: hidden;
+    margin-top: 1em;
     color: var(--pc1);
     font-size: 34px;
+    transition: height 0.2s, margin-top 0.2s;
 }
 .category:hover, .category:active {
     opacity: 0.75;
