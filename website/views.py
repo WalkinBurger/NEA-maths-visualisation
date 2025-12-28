@@ -64,7 +64,7 @@ def validation(username, password):
 
 views = Blueprint("views", __name__)
 
-@views.route("/")
+@views.route("/", methods=["GET", "POST"])
 def home():
     # Anonymous user role if user is not logged in
     if hasattr(current_user, "role"):
@@ -74,7 +74,16 @@ def home():
     # Query all topics
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
-    topics = cursor.execute("SELECT * FROM topics ORDER BY path DESC").fetchall()
+    search = request.args.get('q')
+    if search:
+        topics = cursor.execute('''
+            SELECT * FROM topics
+            WHERE topicName LIKE ? OR path LIKE ?
+            ORDER BY path DESC''',
+            (f'%{search}%',f'%{search}%')
+        ).fetchall()
+    else:
+        topics = cursor.execute("SELECT * FROM topics ORDER BY path DESC").fetchall()
     # Format topics into a flatten 2D array
     topics_flatten = []
     for topicId, topicName, path in topics:
