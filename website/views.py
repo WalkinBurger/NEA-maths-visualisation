@@ -82,8 +82,8 @@ def home():
         for i,category in enumerate(path.split('/')):
             if category[-5:] == ".html":
                 topics_flatten.append([topicName, i, topicId])
-            elif not [category, i] in topics_flatten:
-                topics_flatten.append([category, i])
+            elif not [category.replace('-', ' '), i] in topics_flatten:
+                topics_flatten.append([category.replace('-', ' '), i])
     return render_template("index.html", user=current_user, user_type=user_type, topics=topics_flatten)
 
 @views.route("/login", methods=["GET", "POST"])
