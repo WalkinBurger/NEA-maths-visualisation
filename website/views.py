@@ -186,3 +186,7 @@ def dashboard():
 @views.errorhandler(403)
 def error403(error):
     return render_template("errors/403.html", user=current_user), 403
+
+@views.route("/help")
+def helppage():
+    return render_template("help.html", user=current_user)

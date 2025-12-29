@@ -62,20 +62,31 @@ hr {
     background-color: white;
     border: 1px solid var(--pc1);
     border-radius: 4px;
+    box-sizing: border-box;
     padding: 7px 20px;
     text-align: center;
     color: var(--pc1);
     font-size: 18px;
     cursor: pointer;
     font-family: Georgia, 'Times New Roman', Times, serif;
-    transition: background-color 0.1s, color 0.1s;
+    transition: background-color 0.1s, color 0.1s, outline 0.1s;
 }
-.button1:hover {background-color: whitesmoke;}
+.button1:hover {background-color: var(--hl1);}
 .button1:active {
     background-color: white;
     color: var(--pc2);
     border: 1px solid var(--pc2);
 }
+.button1.active {
+    outline: 3px solid var(--pc2);
+    color: var(--pc2);
+    border: none;
+}
+.a {
+    color: var(--pc2);
+    text-decoration: none;
+}
+.a:hover, .a:active {text-decoration: underline;}
 
 /* Flash message */
 .flash {
@@ -370,5 +381,46 @@ div.responsive > div.expand {
         width: 80vw;
         hyphens: auto;
         word-wrap: break-word;
+    }
+}
+
+
+
+/* ========== help page ========== */
+.help-container {
+    display: grid;
+    width: 480px;
+    margin-top: 0.5em;
+    gap: 20px;
+    grid-template-columns: auto auto auto auto;
+}
+.help-buttons button{
+    margin-bottom: 5px;
+}
+.help-text {
+    display: block;
+    text-align: justify;
+    gap: 0;
+    margin-top: 2em;
+}
+.help-text p{
+    height: 0;
+    overflow: hidden;
+    padding: none;
+    margin: 0;
+    opacity: 0;
+    hyphens: auto;
+    transition: height 0.3s ease-in-out, opacity 0.5s ease-in-out;
+}
+#end-hr {
+    width: 0px;
+}
+@media screen and (max-width: 500px) {
+    .help-container {
+        width: 90vw;
+        display: block;
+    }
+    .help-buttons button{
+        width: 100%;
     }
 }

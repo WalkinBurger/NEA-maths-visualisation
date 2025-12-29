@@ -1,0 +1,60 @@
+{% extends "base.html" %} {%block title %}Help{% endblock %}
+{% block content %}
+<!--The help page-->
+<h1>Help</h1>
+<hr>
+<div class="help-container help-buttons">
+    <!-- Help buttons -->
+    <button type="button" class="button1" onclick="expandhelp(this, 'about')">About</button>
+    <button type="button" class="button1" onclick="expandhelp(this, 'faq')">FAQ</button>
+    <button type="button" class="button1" onclick="expandhelp(this, 'contact')">Contact us</button>
+    <button type="button" class="button1">Tutorial</button>
+</div>
+<div class="help-container help-text" id="text">
+    <!-- Text content -->
+    <p id="about">
+        <span style="font-style: italic; font-weight: bold;">Maths Visualisation</span>
+        is a website that aims to provide free and accessible maths learning materials,
+        specifically for GCSE & A Level maths students, to understand mathematical concepts
+        with visual animations & interacive elements; as well as for teachers, to have visual
+        teaching materials to present mathematical concepts.
+    </p>
+    <p id="faq">
+        <span style="font-style: italic;">&#x2022; "Are the resources on this website free to use?"</span>&mdash;
+        Yes! All you need to access the resources is an account.
+        <br><br>
+        <span style="font-style: italic;">&#x2022; "Placeholder question"</span>&mdash;
+        Placeholder answer.
+    </p>
+    <p id="contact">
+        &#x2022; <a href="https://github.com/WalkinBurger/NEA-maths-visualisation/tree/main" class="a">GitHub</a>
+    </p>
+</div>
+<hr id="end-hr">
+<script>    
+    // function to expand content for the picked help option 
+    expandhelp = async (button, id) => {
+        p = document.getElementById("text").children
+        buttons = document.getElementsByClassName("button1")
+        hr = document.getElementById("end-hr")
+        for (let i = 0; i< buttons.length; i++) {
+            if (buttons[i] != button) {
+                buttons[i].classList.remove("active")
+            } else {button.classList.add("active")}
+        }
+        if (hr.style.width == "0px" || hr.style.width == "") {
+            hr.style.width = "100%"
+            await delay(200)
+        }
+        for (let i = 0; i < p.length; i++) {
+            if (p[i].id == id) {
+                p[i].style.height = p[i].scrollHeight + 'px'
+                p[i].style.opacity = 1
+            } else {
+                p[i].style.height = 0
+                p[i].style.opacity = 0
+            }
+        }
+    }
+</script>
+{% endblock %}

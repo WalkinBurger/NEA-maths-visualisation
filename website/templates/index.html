@@ -1,6 +1,6 @@
 {% extends "base.html" %} {%block title %}Home{% endblock %}
 {% block content %}
-<!--The login section-->
+<!--The homepage-->
 <div style="width: min-content; margin: auto;">
 <h1>Maths Visualisation</h1>
 <input type="text" class="search" placeholder="&#8981;  Search topics" onkeyup="searchBar(this.value)">
@@ -19,6 +19,7 @@
         {% endif %}
     {% endfor %}
 </div>
+<label id="not-found" style="font-size: 24px; font-style: italic; text-align: center; color: var(--hl3); overflow: hidden; height: 0px; transition: height 0.2s;">Topics not found...</label>
 <script>
     // Function to expand/collapse the list whenever it is clicked
     function expandTopic(x) {
@@ -55,6 +56,7 @@
     function searchBar(q) {
         var topics = document.getElementById("container-topics").children
         // Reset and collapse every topic before searching
+        document.getElementById("not-found").style.height = "0"
         for (let i = 0; i < topics.length; i++) {
             if (topics[i].tagName == "HR") {topics[i].style.width = '100%'}
             else if (topics[i].className[5] == '0') {
@@ -85,6 +87,7 @@
                             j++
                         } else {break}}}}}
         // Display the filtered topics
+        if (filtered.length == 0) {document.getElementById("not-found").style.height = "2em"}
         for (let i = 0; i < topics.length; i++) {
             if (!filtered.includes(topics[i])) {
                 if (topics[i].tagName == "HR") {topics[i].style.width = "0%"}
