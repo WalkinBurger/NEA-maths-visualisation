@@ -167,6 +167,7 @@ def signup():
 @login_required
 def logout():
     logout_user()
+    flash("You've logged out.", "success")
     return redirect(url_for("views.login"))
 
 @views.route("topic/<int:topicId>")
@@ -190,3 +191,9 @@ def error403(error):
 @views.route("/help")
 def helppage():
     return render_template("help.html", user=current_user)
+
+@views.route("/settings", methods=["GET", "POST"])
+def settings():
+    if not hasattr(current_user, "role"):
+        current_user.role = "anon"
+    return render_template("settings.html", user=current_user)

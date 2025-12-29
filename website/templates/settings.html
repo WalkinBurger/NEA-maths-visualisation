@@ -1,0 +1,73 @@
+{% extends "base.html" %} {%block title %}Settings{% endblock %}
+{% block content %}
+<!--The settings page-->
+<h1>Settings</h1>
+<hr>
+{% if user.role != "anon" and user.role != "admin" %}
+<div class="settings-containter">
+    <!-- Settings buttons -->
+    <button type="button" class="button1" onclick="expandhelp(this, 'account')">Account</button>
+    <button type="button" class="button1" onclick="expandhelp(this, 'appearance')">Appearance</button>
+</div>
+<div class="settings" id="settings">
+    <div class="settings-div" id="account">
+        <form method="POST">
+            <div class="form-container">
+                <!--Username-->
+                <label class="form-left" for="username">Username:</label>
+                <div class="form-right">
+                    <input type="text" class="form" id="username" name="username" value="{{user.username}}" required>
+                </div>
+                <!--User type-->
+                <label class="form-left" for="usertype">User type:</label>
+                <div class="form-right" style="display: flex;">
+                    <label style="padding-right: 20px;"><input type="radio" id="usertype" name="usertype" required value="student"
+                        {% if user.role == "student" %}checked{% endif %}>Student</label>
+                    <label><input type="radio" id="usertype" name="usertype" required value="teacher"
+                        {% if user.role == "teacher" %}checked{% endif %}>Teacher</label>
+                </div>
+            </div>
+            <!--Update account button-->
+            <div class="settings-containter">
+                <input class="button1" type="submit" value="Update account">
+                <input class="button1" type="button" value="Log out" onclick="location.href='/logout'">
+            </div>
+        </form>
+    </div>
+    <div class="settings-div" id="appearance">
+    {% else %}
+<div class="settings" id="settings">
+    <div class="settings-div-active" >
+
+    {% endif %}
+        test
+    </div>
+</div>
+{% if user.role != "anon" and user.role != "admin" %}<hr id="end-hr">{% else %}<hr>{% endif %}
+<script>    
+    // function to expand content for the picked help option 
+    expandhelp = async (button, id) => {
+        settings = document.getElementById("settings").children
+        buttons = document.getElementsByClassName("button1")
+        hr = document.getElementById("end-hr")
+        for (let i = 0; i< buttons.length; i++) {
+            if (buttons[i] != button) {
+                buttons[i].classList.remove("active")
+            } else {button.classList.add("active")}
+        }
+        if (hr.style.width == "0px" || hr.style.width == "") {
+            hr.style.width = "100%"
+            await delay(200)
+        }
+        for (let i = 0; i < settings.length; i++) {
+            if (settings[i].id == id) {
+                settings[i].style.height = settings[i].scrollHeight + 'px'
+                settings[i].style.opacity = 1
+            } else {
+                settings[i].style.height = 0
+                settings[i].style.opacity = 0
+            }
+        }
+    }
+</script>
+{% endblock %}
