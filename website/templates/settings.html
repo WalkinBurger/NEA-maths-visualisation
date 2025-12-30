@@ -11,7 +11,8 @@
 </div>
 <div class="settings" id="settings">
     <div class="settings-div" id="account">
-        <form method="POST">
+        <!-- Account -->
+        <form method="POST" id="account-form">
             <div class="form-container">
                 <!--Username-->
                 <label class="form-left" for="username">Username:</label>
@@ -20,11 +21,29 @@
                 </div>
                 <!--User type-->
                 <label class="form-left" for="usertype">User type:</label>
-                <div class="form-right" style="display: flex;">
-                    <label style="padding-right: 20px;"><input type="radio" id="usertype" name="usertype" required value="student"
-                        {% if user.role == "student" %}checked{% endif %}>Student</label>
-                    <label><input type="radio" id="usertype" name="usertype" required value="teacher"
-                        {% if user.role == "teacher" %}checked{% endif %}>Teacher</label>
+                <div class="form-right">
+                    <label class="radio">
+                        <span class="checkmark"></span><input type="radio" id="usertype-student"
+                        name="usertype" required value="student"{% if user.role == "student" %}checked{% endif %}
+                        onclick="questionToggle()" />Student
+                    </label>
+                    <label class="radio">
+                        <span class="checkmark"></span><input type="radio" id="usertype-teacher"
+                        name="usertype" required value="teacher"{% if user.role == "teacher" %}checked{% endif %}
+                        onclick="questionToggle()" />Teacher
+                    </label>
+                </div>
+                <!-- Questions toggle-->
+                <label class="form-left" for="questions">Questions:</label>
+                <div class="form-right">
+                    <label class="radio">
+                        <span class="checkmark"></span><input type="radio" id="questions-off" name="questions"
+                        required value="off" {% if user.role == "student" %}disabled{% else %}checked{% endif %}/>Off
+                    </label>
+                    <label class="radio">
+                        <span class="checkmark"></span><input type="radio" id="questions-on" name="questions"
+                        {% if user.role == "student" %}checked{% endif %} required value="on" />On
+                    </label>
                 </div>
             </div>
             <!--Update account button-->
@@ -38,14 +57,45 @@
     {% else %}
 <div class="settings" id="settings">
     <div class="settings-div-active" >
-
     {% endif %}
-        test
+        <!-- Appearance -->
+        <form method="POST" id="account-form">
+            <div class="form-container">
+                <!-- Theme -->
+                <label class="form-left" for="theme">Theme:</label>
+                <div class="form-right">
+                    <label class="radio">
+                        <span class="checkmark"></span><input type="radio" id="theme-light" name="theme"
+                        required value="lgiht" {% if not session.get("darkTheme") %}checked{% endif %}/>Light
+                    </label>
+                    <label class="radio">
+                        <span class="checkmark"></span><input type="radio" id="theme-dark" name="theme"
+                        required value="dark" {% if session.get("darkTheme") %}checked{% endif %} />Dark
+                    </label>
+                </div>
+                <!-- High contrast toggle-->
+                <label class="form-left" for="contrast">High contrast:</label>
+                <div class="form-right">
+                    <label class="radio">
+                        <span class="checkmark"></span><input type="radio" id="contrast-off" name="contrast"
+                        required value="off" {% if not session.get("highContrast") %}checked{% endif %} />Off
+                    </label>
+                    <label class="radio">
+                        <span class="checkmark"></span><input type="radio" id="contrast-on" name="contrast"
+                        required value="on" {% if session.get("highContrast") %}checked{% endif %} />On
+                    </label>
+                </div>
+            </div>
+            <!--Update account button-->
+            <div style="margin: auto; max-width:fit-content;">
+            <input class="button1" type="submit" value="Update appearance">
+            </div>
+        </form>
     </div>
 </div>
 {% if user.role != "anon" and user.role != "admin" %}<hr id="end-hr">{% else %}<hr>{% endif %}
 <script>    
-    // function to expand content for the picked help option 
+    // Function to expand content for the picked help option 
     expandhelp = async (button, id) => {
         settings = document.getElementById("settings").children
         buttons = document.getElementsByClassName("button1")
@@ -67,6 +117,18 @@
                 settings[i].style.height = 0
                 settings[i].style.opacity = 0
             }
+        }
+    }
+    // Function to control when to enable questions toggle
+    function questionToggle() {
+        teacher = document.getElementById("usertype-teacher")
+        questions = document.getElementsByName("questions")
+        if (teacher.checked) {
+            questions[0].disabled = false
+            questions[0].checked = true
+        } else {
+            questions[0].disabled = true
+            questions[1].checked = true
         }
     }
 </script>

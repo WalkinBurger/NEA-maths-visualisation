@@ -24,9 +24,13 @@
         <label class="form-requirement" for="password1 password2">* Password must be between 8 to 30 characters, & must include special character, numbers, lowercase & uppercase</label>
         <!--User type-->
         <label class="form-left" for="usertype">User type:</label>
-        <div class="form-right" style="display: flex;">
-            <label style="padding-right: 20px;"><input type="radio" id="usertype" name="usertype" required value="student">Student</label>
-            <label><input type="radio" id="usertype" name="usertype" required value="teacher">Teacher</label>
+        <div class="form-right">
+            <label class="radio">
+                <span class="checkmark"></span><input type="radio" id="usertype-student" name="usertype" required value="student"/>Student
+            </label>
+            <label class="radio">
+                <span class="checkmark"></span><input type="radio" id="usertype-teacher" name="usertype" required value="teacher" />Teacher
+            </label>
         </div>
     </div>
     <!--Create account button-->

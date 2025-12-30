@@ -28,13 +28,13 @@
     {% if messages %}
         {% for category, message in messages %}
             {% if category == "error" %}
-            <div class="flash" style="background-color:#ebbcba; color: var(--hl3);">
+            <div class="flash" style="background-color:var(--pink); color: var(--hl4);">
             {% elif category == "success" %}
-            <div class="flash" style="background-color: var(--pc3); color: var(--hl3);">
+            <div class="flash" style="background-color: var(--pc3); color: var(--hl4);">
             {% else %}
-            <div class="flash" style="background-color: var(--hl1); color: var(--hl3);">
+            <div class="flash" style="background-color: var(--hl1); color: var(--hl4);">
             {% endif %}
-                <label style="padding-left: 16px;">{{message}}</label>
+                <label style="padding-left: 16px; width: 85vw; hyphens: auto;">{{message}}</label>
                 <button type="button" class="close" onclick="closeMessage(this.parentElement)" title="Close message">&times;</button>
             </div>
         {% endfor %}
@@ -63,5 +63,26 @@
             message.remove()
         }
     </script>
+    <!-- Dark theme -->
+    {% if session.get("darkTheme") %}
+    <script>
+        document.documentElement.style.setProperty('--bg', '#191724');
+        document.documentElement.style.setProperty('--pc1', '#74b4bf');
+        document.documentElement.style.setProperty('--pc2', '#56949f');
+        document.documentElement.style.setProperty('--pc3', '#286983');
+        document.documentElement.style.setProperty('--hl4', '#e0def4');
+        document.documentElement.style.setProperty('--hl3', '#908caa');
+        document.documentElement.style.setProperty('--hl2', '#6e6a86');
+        document.documentElement.style.setProperty('--hl1', '#26233a');
+        document.documentElement.style.setProperty('--pink', '#c4717b');
+        document.documentElement.style.setProperty('--invert', '100%');
+    </script>
+    {% endif %}
+    <!-- High contrast -->
+    {% if session.get("highContrast") %}
+    <script>
+        document.documentElement.style.setProperty('--contrast', '2');
+    </script>
+    {% endif %}
 </body>
 </html>

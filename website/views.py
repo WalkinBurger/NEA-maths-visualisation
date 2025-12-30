@@ -84,7 +84,7 @@ def home():
                 topics_flatten.append([topicName, i, topicId])
             elif not [category.replace('-', ' '), i] in topics_flatten:
                 topics_flatten.append([category.replace('-', ' '), i])
-    return render_template("index.html", user=current_user, user_type=user_type, topics=topics_flatten)
+    return render_template("index.html", user=current_user, session=session, user_type=user_type, topics=topics_flatten)
 
 @views.route("/login", methods=["GET", "POST"])
 def login():
@@ -127,7 +127,7 @@ def login():
         session["attempt"] -= 1
         if session["attempt"] != 0:
             flash(f"Incorrect account details, please try again. (attempts remaining: {session["attempt"]-1})", category="error")
-    return render_template("login.html", user=current_user)
+    return render_template("login.html", user=current_user, session=session)
     
 
 @views.route("/signup", methods=["GET", "POST"])
@@ -161,7 +161,7 @@ def signup():
                 login_user(user, remember=True)
                 flash("Account successfully created", category="success")
                 return redirect(url_for("views.home"))
-    return render_template("signup.html", user=current_user)
+    return render_template("signup.html", user=current_user, session=session)
 
 @views.route("/logout")
 @login_required
@@ -176,24 +176,67 @@ def topic(topicId):
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
     path = cursor.execute("SELECT path FROM topics WHERE topicId=?", (topicId,)).fetchone()[0]
-    return render_template(f"resources/{path}", user=current_user)
+    return render_template(f"resources/{path}", user=current_user, session=session)
 
 @views.route("/dashboard")
 @login_required
 @role_required("admin")
 def dashboard():
-    return render_template("dashboard.html", user=current_user)
+    return render_template("dashboard.html", user=current_user, session=session)
 
 @views.errorhandler(403)
 def error403(error):
-    return render_template("errors/403.html", user=current_user), 403
+    return render_template("errors/403.html", user=current_user, session=session), 403
 
 @views.route("/help")
 def helppage():
-    return render_template("help.html", user=current_user)
+    return render_template("help.html", user=current_user, session=session)
 
 @views.route("/settings", methods=["GET", "POST"])
 def settings():
     if not hasattr(current_user, "role"):
         current_user.role = "anon"
-    return render_template("settings.html", user=current_user)
+    # Update settings
+    if request.method == "POST":
+        username = request.form.get("username")
+        # Account settings updates
+        if username:
+            usertype = request.form.get("usertype")
+            questions = request.form.get("questions")
+            # Update questions-toggle
+            if questions == "off":
+                session["questionsDisabled"] = True
+            elif session.get("questionsDisabled"):
+                session.pop("questionsDisabled")
+            conn = sqlite3.connect("database.db")
+            cursor = conn.cursor()
+            # User type change
+            if current_user.username == username:
+                cursor.execute("UPDATE users SET usertype=? WHERE username=?",(usertype,username))
+                conn.commit()
+                conn.close()
+                current_user.role = usertype
+                flash("Account settings updated successfully", "success")
+            # Username change
+            elif cursor.execute("SELECT username FROM users WHERE username=?",(username,)).fetchone():
+                conn.close()
+                flash("This username already exists, failed to update account.", category="error")
+            else:
+                cursor.execute("UPDATE users SET username=?, usertype=? WHERE userId=?",(username,usertype,current_user.id,))
+                conn.commit()
+                conn.close()
+                current_user.username = username
+                current_user.role = usertype
+                flash("Account settings updated successfully", "success")
+        # Appearance settings updates
+        else:
+            if request.form.get("theme") == "dark":
+                session["darkTheme"] = True
+            elif session.get("darkTheme"):
+                session.pop("darkTheme")
+            if request.form.get("contrast") == "on":
+                session["highContrast"] = True
+            elif session.get("highContrast"):
+                session.pop("highContrast")
+            flash("Appearance settings updated successfully", "success")
+    return render_template("settings.html", user=current_user, session=session)
