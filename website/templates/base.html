@@ -6,8 +6,14 @@
     <title>{% block title %}Placeholder title{% endblock %} - Maths Visualisation</title>
     <link rel="stylesheet" href="../static/style.css">
     <link rel="shortcut icon" href="../static/images/favicon.ico">
+    <!-- For topic resources only -->
+    {% if resource is defined %}
+    <link href="https://fonts.cdnfonts.com/css/latin-modern-math" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/diagramatics@1.5/css/diagramatics.css" rel="stylesheet">
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    {% endif %}
 </head>
-<body>
+<body onload="loadContainer()">
     <!--The navigation bar at the top of the page-->
     <div class="nav" id="navBar">
         <div class="expand">
@@ -43,8 +49,9 @@
     </div>
 
     <!--The container for content in all other pages-->
-    <div class="container">{% block content %}{% endblock %}</div>
+    <div class="container" id="container">{% block content %}{% endblock %}</div>
 
+    <!-- Scripts for all pages -->
     <script>
         const delay = ms => new Promise(res => setTimeout(res, ms));
 
@@ -61,6 +68,17 @@
             message.style.height = '0em';
             await delay(300)
             message.remove()
+        }
+        function loadContainer() {
+            let container = document.getElementById("container")
+            container.style.opacity = 1
+            container.style.transform = "none"
+            let firstPart = container.querySelector(".part")
+            if (firstPart !== null) {
+                firstPart.style.transition = "none"
+                firstPart.style.height = "fit-content"
+                firstPart.style.opacity = 1
+            }
         }
     </script>
     <!-- Dark theme -->

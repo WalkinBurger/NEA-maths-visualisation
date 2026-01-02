@@ -1,9 +1,96 @@
-{% extends "base.html" %} {%block title %}Pythagoras Theorem{% endblock %}
+{% extends "base.html" %} {%block title %}Pythagoras' Theorem{% endblock %}
 {% block content %}
-<!--The login section-->
+<!--The visualisation resource-->
 <div style="width: min-content; margin: auto;">
-<h1>Pythagoras Theorem</h1>
+<h1>Pythagoras' Theorem</h1>
 <hr>
 </div>
-Placeholder
+
+<!-- Content-->
+<div class="part">
+    <p class="text">
+        For a right-angled triangle, the side that is opposite to the right angle is always 
+        the longest. We call this side the <span class="bold">hypotenuse</span>.
+    </p>
+    <svg id="svg1" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
+    <!-- Continue button to the next part -->
+    <div style="width: fit-content; height: 50px; margin: auto; justify-content: center; transition: height 0.3s;">
+        <button type="button" class="button1" style="overflow: hidden;" onclick="continuePart(this)">Continue</button>
+    </div>
+</div>
+<div class="part" id="slot1">
+    <p class="text">
+        So for instance, the <span class="bold">hypotenuse</span> for the triangle below would be...
+    </p>
+    <svg id="svg2" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
+    <div id="question2" class="choices-container"></div> <!-- Answering container -->
+    <!-- Continue button to the next part -->
+    <div style="width: fit-content; height: 50px; margin: auto; justify-content: center; transition: height 0.3s;">
+        <button type="button" class="button1" style="overflow: hidden;" onclick="continuePart(this)">Continue</button>
+    </div>
+</div>
+
+
+<script>
+    continuePart = async (button) => {
+        button.style.opacity = 0
+        button.style.transform = "translateY(-10px)"
+        button.parentElement.style.height = 0
+        let nextPart = button.parentElement.parentElement.nextElementSibling
+        nextPart.style.height = nextPart.scrollHeight+"px"
+        nextPart.style.opacity = 1
+        await delay(300)
+        button.parentElement.remove()
+    }
+</script>
+<!-- Script for diagramatics -->
+<script type="module">
+    import * as dg from 'https://cdn.jsdelivr.net/npm/diagramatics@1.5/dist/diagramatics.min.js'
+    let color = (colorVar) => window.getComputedStyle(document.documentElement).getPropertyValue('--'+colorVar)
+    let draw = (svg, ...diagrams) => {dg.draw_to_svg(svg, dg.diagram_combine(...diagrams))}
+    let bounding = (x,y) => dg.rectangle(x,y).strokewidth(0)
+    function pickQuestion (slotId) {
+        var questions = {{questions|tojson}}
+        var slot = []
+        for (var i=0;i<questions.length;i++) {
+            if (questions[i][5] == slotId) {
+                slot.push(questions[i])
+            }
+        }
+        return slot[Math.floor(Math.random() * slot.length)]
+    }
+    
+    // Part 1
+    let svg1 = document.getElementById("svg1")
+    let tri1 = dg.polygon([dg.V2(-1.5,-1), dg.V2(-1.5,1), dg.V2(1.5,-1)])
+    let ang1 = dg.square(0.3).position(dg.V2(-1.35,-0.85))
+    let ann1 = dg.annotation.length(dg.V2(-1.5,1), dg.V2(1.5,-1), 'Hypotenuse', -0.15, 0.1, -0.5).stroke(color("pc1"));
+    draw(svg1, bounding(3,3), tri1, ang1, ann1)
+
+    // Part 2
+    var pick = pickQuestion(1)
+    import {hypotenuse1} from '{{questionsPath}}'
+    let svg2 = document.getElementById("svg2")
+    let question2 = document.getElementById("question2")
+    if (pick[3] != null) {
+        // multiple choices
+        let choices = pick[3].split('|')
+        for (let i=0;i<choices.length;i++) {
+            let button = document.createElement("button")
+            button.classList += "button1"
+            button.addEventListener('click', function() {
+                let buttons = button.parentElement.children
+                for (let i=0;i<buttons.length;i++) {
+                    buttons[i].classList.remove("active")
+                }
+                button.classList.toggle("active")
+            })
+            button.innerHTML = choices[i]
+            question2.appendChild(button)
+        }
+    } else {
+        // open answer
+    }
+    draw(svg2, ...hypotenuse1())
+</script>
 {% endblock %}

@@ -76,6 +76,7 @@ def home():
     cursor = conn.cursor()
     search = request.args.get('q')
     topics = cursor.execute("SELECT * FROM topics ORDER BY path DESC").fetchall()
+    conn.close()
     # Format topics into a flatten 2D array
     topics_flatten = []
     for topicId, topicName, path in topics:
@@ -176,7 +177,14 @@ def topic(topicId):
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
     path = cursor.execute("SELECT path FROM topics WHERE topicId=?", (topicId,)).fetchone()[0]
-    return render_template(f"resources/{path}", user=current_user, session=session)
+    slots = cursor.execute("SELECT slotId FROM questionSlots WHERE topicId=?", (topicId,)).fetchall()
+    questions = []
+    for slotId in slots:
+        for question in cursor.execute("SELECT * FROM questions WHERE slotId=?", (slotId[0],)).fetchall():
+            questions.append(question)
+    conn.close()
+    questionsPath = os.path.relpath("website/static/questions.js", f"website/templates/resources/path")
+    return render_template(f"resources/{path}", user=current_user, session=session, resource=True, questions=questions, questionsPath=questionsPath)
 
 @views.route("/dashboard")
 @login_required
@@ -187,6 +195,10 @@ def dashboard():
 @views.errorhandler(403)
 def error403(error):
     return render_template("errors/403.html", user=current_user, session=session), 403
+
+@views.errorhandler(404)
+def error404(error):
+    return render_template("errors/404.html", user=current_user, session=session), 404
 
 @views.route("/help")
 def helppage():

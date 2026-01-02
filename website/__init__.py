@@ -25,6 +25,26 @@ def init_db():
             path TEXT NOT NULL
         )
     ''')
+    # QuestionSlots table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS questionSlots (
+            slotId INTEGER PRIMARY KEY,
+            topicId INTEGER,
+            FOREIGN KEY(topicId) REFERENCES topics(topicId)
+        )
+    ''')
+    # Questions table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS questions (
+            questionId INTEGER PRIMARY KEY,
+            questionFunction TEXT NOT NULL,
+            answer TEXT NOT NULL,
+            choices TEXT NOT NULL,
+            explanation TEXT NOT NULL,
+            slotId INTEGER,
+            FOREIGN KEY(slotId) REFERENCES questionSlots(slotId)
+        )
+    ''')
     conn.commit()
     conn.close()
 
