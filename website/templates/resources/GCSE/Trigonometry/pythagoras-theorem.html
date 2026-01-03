@@ -14,10 +14,11 @@
     </p>
     <svg id="svg1" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
     <!-- Continue button to the next part -->
-    <div style="width: fit-content; height: 50px; margin: auto; justify-content: center; transition: height 0.3s;">
+    <div class="continue-container">
         <button type="button" class="button1" style="overflow: hidden;" onclick="continuePart(this)">Continue</button>
     </div>
 </div>
+
 <div class="part" id="slot1">
     <p class="text">
         So for instance, the <span class="bold">hypotenuse</span> for the triangle below would be...
@@ -25,17 +26,75 @@
     <svg id="svg2" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
     <div id="question2" class="choices-container"></div> <!-- Answering container -->
     <!-- Continue button to the next part -->
-    <div style="width: fit-content; height: 50px; margin: auto; justify-content: center; transition: height 0.3s;">
+    <div class="continue-container">
+        <button type="button" class="button1" style="overflow: hidden;" onclick="continuePart(this)">Continue</button>
+    </div>
+</div>
+
+<div class="part" id="explain1">
+    <p class="text"><span class="bold">[mark] Answer : </span></p>
+    <p class="text"><span class="bold">Explanation: </span></p>
+    <!-- Continue button to the next part -->
+    <div class="continue-container">
+        <button type="button" class="button1" style="overflow: hidden;" onclick="continuePart(this)">Continue</button>
+    </div>
+</div>
+
+<div class="part">
+    <p class="text">
+    </p>
+    <!-- Continue button to the next part -->
+    <div class="continue-container">
         <button type="button" class="button1" style="overflow: hidden;" onclick="continuePart(this)">Continue</button>
     </div>
 </div>
 
 
+
+
 <script>
+    // Disable continue buttons that are in questions part
+    let continues = document.getElementsByClassName("continue-container")
+    for (let i=0;i<continues.length;i++) {
+        if (continues[i].parentElement.id.includes("slot")) {
+            continues[i].firstElementChild.disabled = true
+        }
+    }
+
+    // Function for continue button to display the next part
     continuePart = async (button) => {
         button.style.opacity = 0
         button.style.transform = "translateY(-10px)"
         button.parentElement.style.height = 0
+        // If part is question
+        if (button.parentElement.parentElement.id.includes("slot")) {
+            let choices = button.parentElement.parentElement.getElementsByClassName("choices-container")
+            let submit
+            // If question is multile choice
+            if (choices) {
+                for (let i=0;i<choices[0].children.length;i++) {
+                    choices[0].children[i].disabled = true
+                    if (choices[0].children[i].classList.contains("active")) {
+                        submit = choices[0].children[i]
+                    }
+                }
+            }
+            // Next part with explanation
+            let explain = document.getElementById("explain"+button.parentElement.parentElement.id.slice(-1))
+            let answer = explain.querySelector(".text")
+            // Verify answer
+            if (submit.innerHTML == answer.innerHTML.split('<span class="bold">[mark] Answer : </span>')[0] ||
+                submit.getElementsByTagName("mjx-c").innerHTML == answer.getElementsByTagName("mjx-c").innerHTML) {
+                // Correct answer
+                explain.style.backgroundColor = "var(--pc3)"
+                answer.innerHTML = answer.innerHTML.replace("[mark]","&#x2714;")
+            } else {
+                // Wrong answer
+                explain.style.backgroundColor = "var(--pink)"
+                answer.innerHTML = answer.innerHTML.replace("[mark]","&#x2718;")
+            }
+        }
+        // Show next part
         let nextPart = button.parentElement.parentElement.nextElementSibling
         nextPart.style.height = nextPart.scrollHeight+"px"
         nextPart.style.opacity = 1
@@ -62,8 +121,8 @@
     
     // Part 1
     let svg1 = document.getElementById("svg1")
-    let tri1 = dg.polygon([dg.V2(-1.5,-1), dg.V2(-1.5,1), dg.V2(1.5,-1)])
-    let ang1 = dg.square(0.3).position(dg.V2(-1.35,-0.85))
+    let tri1 = dg.polygon([dg.V2(-1.5,-1), dg.V2(-1.5,1), dg.V2(1.5,-1)]).stroke(color("hl4"))
+    let ang1 = dg.square(0.3).position(dg.V2(-1.35,-0.85)).stroke(color("hl3"))
     let ann1 = dg.annotation.length(dg.V2(-1.5,1), dg.V2(1.5,-1), 'Hypotenuse', -0.15, 0.1, -0.5).stroke(color("pc1"));
     draw(svg1, bounding(3,3), tri1, ang1, ann1)
 
@@ -78,12 +137,13 @@
         for (let i=0;i<choices.length;i++) {
             let button = document.createElement("button")
             button.classList += "button1"
-            button.addEventListener('click', function() {
+            button.addEventListener('mousedown', function() {
                 let buttons = button.parentElement.children
                 for (let i=0;i<buttons.length;i++) {
                     buttons[i].classList.remove("active")
                 }
                 button.classList.toggle("active")
+                button.parentElement.parentElement.getElementsByClassName("continue-container")[0].children[0].disabled = false
             })
             button.innerHTML = choices[i]
             question2.appendChild(button)
@@ -92,5 +152,13 @@
         // open answer
     }
     draw(svg2, ...hypotenuse1())
+
+    // Part 3
+    // Insert eplanation & answer into text paragraph to verify
+    let explain1 = document.getElementById("explain1").querySelectorAll(".text")
+    explain1[0].innerHTML += pick[2]
+    explain1[1].innerHTML += pick[4]
+
+    try{MathJax.typeset()} catch{MathJax.typesetPromise()}
 </script>
 {% endblock %}

@@ -10,6 +10,11 @@
     {% if resource is defined %}
     <link href="https://fonts.cdnfonts.com/css/latin-modern-math" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/diagramatics@1.5/css/diagramatics.css" rel="stylesheet">
+    <script>
+        MathJax = {
+            tex: {inlineMath: {'[+]': [['$', '$']]}},
+        };
+    </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     {% endif %}
 </head>

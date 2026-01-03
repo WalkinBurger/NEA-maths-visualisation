@@ -82,10 +82,10 @@ hr {
     transition: color 0.1s, outline 0.1s, transform 0.3s, opacity 0.3s;
     white-space: normal;
 }
-.button1:hover {
+.button1:hover:not(:disabled) {
     background-color: var(--hl1);
 }
-.button1:active {
+.button1:active:not(:disabled) {
     background-color: var(--bg);
     color: var(--pc2);
     border: 1px solid var(--pc2);
@@ -94,6 +94,10 @@ hr {
     outline: 3px solid var(--pc2);
     color: var(--pc2);
     border: 1px solid transparent;
+}
+.button1:disabled {
+    opacity: 0.5;
+    cursor: default;
 }
 .a {
     color: var(--pc2);
@@ -545,17 +549,17 @@ div.responsive > div.expand {
     width: 60vw;
     min-width: 340px;
     max-width: 640px;
-    padding: 0 20px;
+    padding: 10px 20px;
     margin: auto;
     text-align: justify;
 }
 .part {
     margin: auto;
     overflow: hidden;
-    padding: 20px 0;
     opacity: 0;
     height: 0px;
     transition: opacity 0.3s;
+    border-radius: 4px;
 }
 .choices-container {
     display: flex;
@@ -563,6 +567,14 @@ div.responsive > div.expand {
     padding: 20px;
     gap: 20px;
 }
+.continue-container {
+    width: fit-content;
+    height: 50px;
+    margin: auto;
+    justify-content: center;
+    transition: height 0.3s;
+}
+
 .italic {font-style: italic;}
 .bold {font-weight: bold;}
 
@@ -577,4 +589,7 @@ div.responsive > div.expand {
 }
 .diagramatics-slider {background-color: var(--hl2) !important;}
 
-svg text {font-size: 0.18px;}
+svg text {
+    font-size: 0.2px;
+    fill: var(--hl4) !important;
+}
