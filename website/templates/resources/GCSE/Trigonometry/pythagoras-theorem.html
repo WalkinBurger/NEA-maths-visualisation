@@ -84,7 +84,7 @@
             let answer = explain.querySelector(".text")
             // Verify answer
             if (submit.innerHTML == answer.innerHTML.split('<span class="bold">[mark] Answer : </span>')[0] ||
-                submit.getElementsByTagName("mjx-c").innerHTML == answer.getElementsByTagName("mjx-c").innerHTML) {
+                submit.getElementsByTagName("mjx-c")[0].innerHTML == answer.getElementsByTagName("mjx-c")[0].innerHTML) {
                 // Correct answer
                 explain.style.backgroundColor = "var(--pc3)"
                 answer.innerHTML = answer.innerHTML.replace("[mark]","&#x2714;")

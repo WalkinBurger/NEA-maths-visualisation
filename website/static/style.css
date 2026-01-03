@@ -555,7 +555,6 @@ div.responsive > div.expand {
 }
 .part {
     margin: auto;
-    overflow: hidden;
     opacity: 0;
     height: 0px;
     transition: opacity 0.3s;
@@ -593,3 +592,10 @@ svg text {
     font-size: 0.2px;
     fill: var(--hl4) !important;
 }
+.mjx-selected {
+  outline: 1px solid var(--hl3) ! important;
+}
+rect[sre-highlighter-added]:has(+ .mjx-selected) {
+  stroke: 1px solid var(--hl3) ! important;
+}
+.mjx-selected mjx-c {color: var(--pc1) !important}
