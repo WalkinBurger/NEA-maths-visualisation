@@ -10,7 +10,7 @@
 <div class="part">
     <p class="text">
         For a right-angled triangle, the side that is opposite to the right angle is always 
-        the longest. We call this side the <span class="bold">hypotenuse</span>.
+        the longest. We call this side the <b>hypotenuse</b>.
     </p>
     <svg id="svg1" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
     <!-- Continue button to the next part -->
@@ -21,7 +21,7 @@
 
 <div class="part" id="slot1">
     <p class="text">
-        So for instance, the <span class="bold">hypotenuse</span> for the triangle below would be...
+        So for instance, the <b>hypotenuse</b></span> for the triangle below would be...
     </p>
     <svg id="svg2" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
     <div id="question2" class="choices-container"></div> <!-- Answering container -->
@@ -32,8 +32,8 @@
 </div>
 
 <div class="part" id="explain1">
-    <p class="text"><span class="bold">[mark] Answer : </span></p>
-    <p class="text"><span class="bold">Explanation: </span></p>
+    <p class="text"><b>[mark] Answer : </b></p>
+    <p class="text"><b>Explanation: </b></p>
     <!-- Continue button to the next part -->
     <div class="continue-container">
         <button type="button" class="button1" style="overflow: hidden;" onclick="continuePart(this)">Continue</button>
@@ -42,14 +42,36 @@
 
 <div class="part">
     <p class="text">
+        Now let's give each side of the triangle a variable name, specifically, let's call the hypotenuse 
+        $c$, and the other two sides as $a$ & $b$ respectively.
     </p>
-    <!-- Continue button to the next part -->
+    <svg id="svg4" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
     <div class="continue-container">
         <button type="button" class="button1" style="overflow: hidden;" onclick="continuePart(this)">Continue</button>
     </div>
 </div>
 
+<div class="part">
+    <p class="text">
+        If we then make $3$ squares on each side of the triangle, we get $3$ differently sized squares, 
+        with <b>side lengths</b> $a, b,$ & $c$.
+    </p>
+    <svg id="svg5" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
+    <div class="continue-container">
+        <button type="button" class="button1" style="overflow: hidden;" onclick="continuePart(this)">Continue</button>
+    </div>
+</div>
 
+<div class="part">
+    <p class="text">
+        Pythagoras' theorem states that for a right-angled triangle with sides $a, b,$ & $c$ like so, 
+        the <b>area of the square</b> on $c$ is <b>equal</b> to the <b>area of the square</b> on $a$ & $b$ <b>summed</b> together.
+    </p>
+    <svg id="svg6" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
+    <div class="continue-container">
+        <button type="button" class="button1" style="overflow: hidden;" onclick="continuePart(this)">Continue</button>
+    </div>
+</div>
 
 
 <script>
@@ -102,18 +124,21 @@
         button.parentElement.remove()
     }
 </script>
+
+
 <!-- Script for diagramatics -->
 <script type="module">
     import * as dg from 'https://cdn.jsdelivr.net/npm/diagramatics@1.5/dist/diagramatics.min.js'
+    import * as questions from '{{questionsPath}}'
     let color = (colorVar) => window.getComputedStyle(document.documentElement).getPropertyValue('--'+colorVar)
     let draw = (svg, ...diagrams) => {dg.draw_to_svg(svg, dg.diagram_combine(...diagrams))}
     let bounding = (x,y) => dg.rectangle(x,y).strokewidth(0)
     function pickQuestion (slotId) {
-        var questions = {{questions|tojson}}
-        var slot = []
-        for (var i=0;i<questions.length;i++) {
-            if (questions[i][5] == slotId) {
-                slot.push(questions[i])
+        let questionsQeury = {{questions|tojson}}
+        let slot = []
+        for (let i=0;i<questionsQeury.length;i++) {
+            if (questionsQeury[i][5] == slotId) {
+                slot.push(questionsQeury[i])
             }
         }
         return slot[Math.floor(Math.random() * slot.length)]
@@ -123,12 +148,11 @@
     let svg1 = document.getElementById("svg1")
     let tri1 = dg.polygon([dg.V2(-1.5,-1), dg.V2(-1.5,1), dg.V2(1.5,-1)]).stroke(color("hl4"))
     let ang1 = dg.square(0.3).position(dg.V2(-1.35,-0.85)).stroke(color("hl3"))
-    let ann1 = dg.annotation.length(dg.V2(-1.5,1), dg.V2(1.5,-1), 'Hypotenuse', -0.15, 0.1, -0.5).stroke(color("pc1"));
+    let ann1 = dg.annotation.length(dg.V2(-1.5,1), dg.V2(1.5,-1), 'Hypotenuse', -0.15, 0.1, -0.5).stroke(color("pc1")).fontsize(20)
     draw(svg1, bounding(3,3), tri1, ang1, ann1)
-
+    
     // Part 2
     var pick = pickQuestion(1)
-    import {hypotenuse1} from '{{questionsPath}}'
     let svg2 = document.getElementById("svg2")
     let question2 = document.getElementById("question2")
     if (pick[3] != null) {
@@ -151,14 +175,48 @@
     } else {
         // open answer
     }
-    draw(svg2, ...hypotenuse1())
-
+    draw(svg2, ...eval(`questions.${pick[1]}()`))
+    
     // Part 3
     // Insert eplanation & answer into text paragraph to verify
     let explain1 = document.getElementById("explain1").querySelectorAll(".text")
     explain1[0].innerHTML += pick[2]
     explain1[1].innerHTML += pick[4]
+    
+    // Part 4
+    let svg4 = document.getElementById("svg4")
+    let ang4 = dg.square(0.3).position(dg.V2(-0.85,-0.6)).stroke(color("hl3"))
+    let tri4 = dg.polygon([dg.V2(-1,-0.75), dg.V2(-1,0.75), dg.V2(1,-0.75)]).stroke(color("hl4")).combine(ang4)
+    let [a4,b4,c4] = [dg.textvar("a").position(dg.V2(-1.3,0)), dg.textvar("b").position(dg.V2(0,-1)), dg.textvar("c").position(dg.V2(0.1,0.2))]
+    draw(svg4, bounding(2.5,2.5), tri4, a4.fontsize(24),b4.fontsize(24),c4.fontsize(24))
+    
+    // Part 5
+    let sqStyle = (d) => d.strokedasharray([10]).stroke(color("hl3"))
+    let svg5 = document.getElementById("svg5")
+    let [Asq5,Bsq5,Csq5] = [
+        dg.square(1.5).position(dg.V2(-1.75,0)).apply(sqStyle),
+        dg.square(2).position(dg.V2(0,-1.75)).apply(sqStyle),
+        dg.square(2.5).rotate(-Math.atan(0.75)).position(dg.V2(0.75, 1)).apply(sqStyle)
+    ]
+    draw(svg5, tri4, a4.fontsize(24),b4.fontsize(24),c4.fontsize(24),Asq5, Bsq5, Csq5)
 
-    try{MathJax.typeset()} catch{MathJax.typesetPromise()}
+    // Part 6
+    let svg6 = document.getElementById("svg6")
+    let sq6 = [dg.square(1.5).apply(sqStyle),dg.square(2).apply(sqStyle),dg.square(2.5).apply(sqStyle)]
+    sq6 = dg.distribute_horizontal(sq6, 1)
+    let [a6,b6,c6] = [
+        dg.annotation.length(dg.V2(-0.75,-0.75), dg.V2(0.75,-0.75), 'a', 0.3, 0.2).stroke(color("pc1")).fontsize(24),
+        dg.annotation.length(dg.V2(1.75,-1), dg.V2(3.75,-1), 'b', 0.3, 0.2).stroke(color("pc1")).fontsize(24),
+        dg.annotation.length(dg.V2(4.75,-1.25), dg.V2(7.25,-1.25), 'c', 0.3, 0.2).stroke(color("pc1")).fontsize(24)
+    ]
+    let text6 = [
+        dg.textvar('+').position(dg.V2(1.25,0)).fontsize(24),
+        dg.textvar('=').position(dg.V2(4.25,0)).fontsize(24)
+    ]
+    draw(svg6, sq6, a6, b6, c6, text6[0], text6[1]  )
+    
+
+
+    try{MathJax.typeset()} catch{}
 </script>
 {% endblock %}

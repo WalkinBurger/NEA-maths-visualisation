@@ -549,7 +549,7 @@ div.responsive > div.expand {
     width: 60vw;
     min-width: 340px;
     max-width: 640px;
-    padding: 10px 20px;
+    padding: 20px 20px;
     margin: auto;
     text-align: justify;
 }
@@ -574,10 +574,6 @@ div.responsive > div.expand {
     transition: height 0.3s;
 }
 
-.italic {font-style: italic;}
-.bold {font-weight: bold;}
-
-
 .diagramatics-slider-playbutton,
 .diagramatics-slider::-webkit-slider-thumb,
 .diagramatics-slider::-moz-range-thumb
@@ -589,7 +585,6 @@ div.responsive > div.expand {
 .diagramatics-slider {background-color: var(--hl2) !important;}
 
 svg text {
-    font-size: 0.2px;
     fill: var(--hl4) !important;
 }
 .mjx-selected {
