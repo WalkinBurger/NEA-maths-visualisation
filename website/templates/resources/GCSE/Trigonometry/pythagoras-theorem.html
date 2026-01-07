@@ -79,7 +79,7 @@
     </p>
     <svg id="svg7" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
     <div id="question2" class="input-container">
-    <label class="input-tex">$x=2$</label>
+    <label class="input-tex">$\dots$</label>
     </div> <!-- Answering container -->
     <!-- Continue button to the next part -->
     <div class="continue-container">
@@ -148,6 +148,18 @@
         button.parentElement.remove()
     }
 
+    function typesetInput(text) {
+        if (text == '') {return "$\\dots$"}
+        if (text.indexOf('/') == -1) {return '$'+text.replace('*',"\\times")+'$'}
+        let bracketIndexes = [0,0]
+        for (i=0;i<text.length;i++) {
+            if (text[i] == '(') {bracketIndexes[0] = i}                               
+            else if (text[i] == ')') {bracketIndexes[1] = i}                               
+               
+        }
+        return text
+    }
+
     function answerField(pick, questionDiv) {
       if (pick[3] != '') {
         // multiple choices
@@ -172,6 +184,10 @@
         input.className += "answer-input"
         input.placeholder= "Enter your answer:"
         let inputTex = questionDiv.children[0]
+        input.addEventListener("input", function(){
+            inputTex.innerHTML = typesetInput(input.value)
+            MathJax.typeset([inputTex])
+        })
         questionDiv.insertBefore(input, inputTex)
     }
 }
