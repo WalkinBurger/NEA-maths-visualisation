@@ -21,10 +21,10 @@
 
 <div class="part" id="slot1">
     <p class="text">
-        So for instance, the <b>hypotenuse</b></span> for the triangle below would be...
+        So for instance, the <b>hypotenuse</b> for the triangle below would be...
     </p>
     <svg id="svg2" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
-    <div id="question2" class="choices-container"></div> <!-- Answering container -->
+    <div id="question1" class="choices-container"></div> <!-- Answering container -->
     <!-- Continue button to the next part -->
     <div class="continue-container">
         <button type="button" class="button1" style="overflow: hidden;" onclick="continuePart(this)">Continue</button>
@@ -73,6 +73,30 @@
     </div>
 </div>
 
+<div class="part" id="slot2">
+    <p class="text">
+        We can calculate the area of a square by doing <b>side length$*$side length</b>, which means for the square below, the area would be...
+    </p>
+    <svg id="svg7" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
+    <div id="question2" class="input-container">
+    <label class="input-tex">$x=2$</label>
+    </div> <!-- Answering container -->
+    <!-- Continue button to the next part -->
+    <div class="continue-container">
+        <button type="button" class="button1" style="overflow: hidden;" onclick="continuePart(this)">Continue</button>
+    </div>
+</div>
+
+<div class="part" id="explain2">
+    <p class="text"><b>[mark] Answer : </b></p>
+    <p class="text"><b>Explanation: </b></p>
+    <!-- Continue button to the next part -->
+    <div class="continue-container">
+        <button type="button" class="button1" style="overflow: hidden;" onclick="continuePart(this)">Continue</button>
+    </div>
+</div>
+
+
 
 <script>
     // Disable continue buttons that are in questions part
@@ -83,7 +107,7 @@
         }
     }
 
-    // Function for continue button to display the next part
+    // Function for continue button to disprlay the next part
     continuePart = async (button) => {
         button.style.opacity = 0
         button.style.transform = "translateY(-10px)"
@@ -92,7 +116,7 @@
         if (button.parentElement.parentElement.id.includes("slot")) {
             let choices = button.parentElement.parentElement.getElementsByClassName("choices-container")
             let submit
-            // If question is multile choice
+            // If question is multiple choice
             if (choices) {
                 for (let i=0;i<choices[0].children.length;i++) {
                     choices[0].children[i].disabled = true
@@ -123,6 +147,39 @@
         await delay(300)
         button.parentElement.remove()
     }
+
+    function answerField(pick, questionDiv) {
+      if (pick[3] != '') {
+        // multiple choices
+        let choices = pick[3].split('|')
+        for (let i=0;i<choices.length;i++) {
+            let button = document.createElement("button")
+            button.classList += "button1"
+            button.addEventListener('mousedown', function() {
+                let buttons = button.parentElement.children
+                for (let i=0;i<buttons.length;i++) {
+                    buttons[i].classList.remove("active")
+                }
+                button.classList.toggle("active")
+                button.parentElement.parentElement.getElementsByClassName("continue-container")[0].children[0].disabled = false
+            })
+            button.innerHTML = choices[i]
+            questionDiv.appendChild(button)
+        }
+    } else {
+        // open answer
+        let input = document.createElement("input")
+        input.className += "answer-input"
+        input.placeholder= "Enter your answer:"
+        let inputTex = questionDiv.children[0]
+        questionDiv.insertBefore(input, inputTex)
+    }
+}
+
+function explainField(pick, explainDiv) { 
+    explainDiv[0].innerHTML += (pick[2]).replace('|', " or ")
+    explainDiv[1].innerHTML += pick[4]
+}
 </script>
 
 
@@ -154,34 +211,13 @@
     // Part 2
     var pick = pickQuestion(1)
     let svg2 = document.getElementById("svg2")
-    let question2 = document.getElementById("question2")
-    if (pick[3] != null) {
-        // multiple choices
-        let choices = pick[3].split('|')
-        for (let i=0;i<choices.length;i++) {
-            let button = document.createElement("button")
-            button.classList += "button1"
-            button.addEventListener('mousedown', function() {
-                let buttons = button.parentElement.children
-                for (let i=0;i<buttons.length;i++) {
-                    buttons[i].classList.remove("active")
-                }
-                button.classList.toggle("active")
-                button.parentElement.parentElement.getElementsByClassName("continue-container")[0].children[0].disabled = false
-            })
-            button.innerHTML = choices[i]
-            question2.appendChild(button)
-        }
-    } else {
-        // open answer
-    }
+    let question1 = document.getElementById("question1")
+    answerField(pick, question1)
     draw(svg2, ...eval(`questions.${pick[1]}()`))
     
     // Part 3
     // Insert eplanation & answer into text paragraph to verify
-    let explain1 = document.getElementById("explain1").querySelectorAll(".text")
-    explain1[0].innerHTML += pick[2]
-    explain1[1].innerHTML += pick[4]
+    explainField(pick, document.getElementById("explain1").querySelectorAll(".text"))
     
     // Part 4
     let svg4 = document.getElementById("svg4")
@@ -214,6 +250,17 @@
         dg.textvar('=').position(dg.V2(4.25,0)).fontsize(24)
     ]
     draw(svg6, sq6, a6, b6, c6, text6[0], text6[1]  )
+
+     // Part 7
+    var pick = pickQuestion(2)
+    let svg7 = document.getElementById("svg7")
+    let question2 = document.getElementById("question2")
+    answerField(pick, question2)
+    draw(svg7, ...eval(`questions.${pick[1]}()`))
+    
+    // Part 8
+    // Insert eplanation & answer into text paragraph to verify
+    explainField(pick, document.getElementById("explain2").querySelectorAll(".text"))
     
 
 
