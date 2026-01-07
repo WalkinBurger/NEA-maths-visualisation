@@ -18,3 +18,18 @@ export function hypotenuse1() {return hypotenuse([1.3,2], [-1.2,0.6], [-0.2,0.9]
 export function hypotenuse2() {return hypotenuse([1.5,1.5], [-0.6,-0.4], [0.6,-0.4], [0,-1.2], Math.PI*-0.75, [2.5, 2.5])}
 
 export function hypotenuse3() {return hypotenuse([1,2], [0.4,0.35], [1,-0.5], [0.3,-0.9], Math.PI*-0.35)}
+
+
+function squareArea (ann) {
+  let sq = dg.square(2)
+  let side1 = dg.annotation.length(dg.V2(-1,-1), dg.V2(1,-1), ann, 0.2, 0.2).stroke(color("pc1")).fontsize(20)
+  let side2 = dg.annotation.length(dg.V2(1,-1), dg.V2(1,1), ann, 0.2, 0.2).stroke(color("pc1")).fontsize(20)
+  let ques = dg.textvar("?").position(dg.V2(0,0)).fontsize(32)
+  return [bounding(2.5,3.5), sq, side1, side2, ques]
+}
+
+export function squareArea1() {return squareArea('a')}
+
+export function squareArea2() {return squareArea('b')}
+
+export function squareArea3() {return squareArea('c')}
