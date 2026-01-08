@@ -78,9 +78,7 @@
         We can calculate the area of a square by doing <b>side length$\times$side length</b>, which means for the square below, the area would be...
     </p>
     <svg id="svg7" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
-    <div id="question2" class="input-container">
-    <label class="input-tex">$\dots$</label>
-    </div> <!-- Answering container -->
+    <div id="question2" class="choices-container"></div> <!-- Answering container -->
     <!-- Continue button to the next part -->
     <div class="continue-container">
         <button type="button" class="button1" style="overflow: hidden;" onclick="continuePart(this)">Continue</button>
@@ -116,21 +114,29 @@
         if (button.parentElement.parentElement.id.includes("slot")) {
             let choices = button.parentElement.parentElement.getElementsByClassName("choices-container")
             let submit
-            // If question is multiple choice
-            if (choices) {
-                for (let i=0;i<choices[0].children.length;i++) {
-                    choices[0].children[i].disabled = true
-                    if (choices[0].children[i].classList.contains("active")) {
-                        submit = choices[0].children[i]
-                    }
+            for (let i=0;i<choices[0].children.length;i++) {
+                choices[0].children[i].disabled = true
+                if (choices[0].children[i].classList.contains("active")) {
+                    submit = choices[0].children[i]
                 }
             }
             // Next part with explanation
             let explain = document.getElementById("explain"+button.parentElement.parentElement.id.slice(-1))
             let answer = explain.querySelector(".text")
             // Verify answer
-            if (submit.innerHTML == answer.innerHTML.split('<span class="bold">[mark] Answer : </span>')[0] ||
-                submit.getElementsByTagName("mjx-c")[0].innerHTML == answer.getElementsByTagName("mjx-c")[0].innerHTML) {
+            let correct = false
+            let mjxMath = answer.getElementsByTagName("mjx-math")
+            if (mjxMath) {
+                for (i=0;i<mjxMath.length;i++) {
+                    if (mjxMath[i].getAttribute("data-latex") == submit.getElementsByTagName("mjx-math")[0].getAttribute("data-latex")) {
+                        correct = true
+                        break
+                    }
+                }
+            } else if (submit.innerHTML == answer.innerHTML.split('<span class="bold">[mark] Answer : </span>')[0]) {
+                correct = true
+            }
+            if (correct == true) {
                 // Correct answer
                 explain.style.backgroundColor = "var(--pc3)"
                 answer.innerHTML = answer.innerHTML.replace("[mark]","&#x2714;")
@@ -148,30 +154,7 @@
         button.parentElement.remove()
     }
 
-    // Function to typeset the user's answer to verify
-    function typesetInput(text) {
-        // Empty answer returns "..."
-        if (text == '') {return "$\\dots$"}
-        let texText = ''
-        // Replace () brackets with TeX {} brackets while keeping them in place
-        for (i=0;i<text.length;i++) {
-            if (text[i] == '(') {
-                texText += '{'
-                texText += text[i]
-            }
-            else if (text[i] == ')') {
-                texText += text[i]
-                texText += '}'
-            } else {texText += text[i]}
-        }
-        // Add the $$ TeX identifier and replace * symbol for TeX times symbol
-        texText = '$'+texText.replace('*', "\\times ")+'$'
-        return texText
-    }
-
     function answerField(pick, questionDiv) {
-      if (pick[3] != '') {
-        // multiple choices
         let choices = pick[3].split('|')
         for (let i=0;i<choices.length;i++) {
             let button = document.createElement("button")
@@ -187,24 +170,12 @@
             button.innerHTML = choices[i]
             questionDiv.appendChild(button)
         }
-    } else {
-        // open answer
-        let input = document.createElement("input")
-        input.className += "answer-input"
-        input.placeholder= "Enter your answer:"
-        let inputTex = questionDiv.children[0]
-        input.addEventListener("input", function(){
-            inputTex.innerHTML = typesetInput(input.value)
-            MathJax.typeset([inputTex])
-        })
-        questionDiv.insertBefore(input, inputTex)
     }
-}
 
-function explainField(pick, explainDiv) { 
-    explainDiv[0].innerHTML += (pick[2]).replace('|', " or ")
-    explainDiv[1].innerHTML += pick[4]
-}
+    function explainField(pick, explainDiv) { 
+        explainDiv[0].innerHTML += (pick[2]).replace('|', " or ")
+        explainDiv[1].innerHTML += pick[4]
+    }
 </script>
 
 

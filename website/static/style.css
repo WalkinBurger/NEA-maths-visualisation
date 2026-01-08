@@ -575,34 +575,6 @@ div.responsive > div.expand {
     justify-content: center;
     transition: height 0.3s;
 }
-.answer-input {
-    border: none;
-    box-sizing: border-box;
-    border-radius: 4px;
-    background-color: var(--hl1);
-    color: var(--hl4);
-    font-family: serif;
-    font-size: 18px;
-    padding-left: 7px;
-    height: 24px;
-    width: 90%;
-    margin: auto 20px;
-}
-.answer-in:focus {
-    filter: brightness(0.9);
-    transition: 0.1s;
-}
-.input-container {
-    display: flex;
-    flex-direction: column;
-    height: fit-content;
-    margin: 20px;
-    align-items: center;
-    justify-items: center;
-}
-.input-tex {
-    text-align: justify;
-}
 .diagramatics-slider-playbutton,
 .diagramatics-slider::-webkit-slider-thumb,
 .diagramatics-slider::-moz-range-thumb
