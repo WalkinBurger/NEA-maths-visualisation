@@ -75,7 +75,7 @@
 
 <div class="part" id="slot2">
     <p class="text">
-        We can calculate the area of a square by doing <b>side length$*$side length</b>, which means for the square below, the area would be...
+        We can calculate the area of a square by doing <b>side length$\times$side length</b>, which means for the square below, the area would be...
     </p>
     <svg id="svg7" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
     <div id="question2" class="input-container">
@@ -148,25 +148,24 @@
         button.parentElement.remove()
     }
 
+    // Function to typeset the user's answer to verify
     function typesetInput(text) {
+        // Empty answer returns "..."
         if (text == '') {return "$\\dots$"}
-        if (text.indexOf('/') != -1) {return '$'+text.replace('*',"\\times")+'$'}
-        let bracketIndexes = [0,0]
         let texText = ''
+        // Replace () brackets with TeX {} brackets while keeping them in place
         for (i=0;i<text.length;i++) {
             if (text[i] == '(') {
-                bracketIndexes[0] = i
                 texText += '{'
                 texText += text[i]
             }
             else if (text[i] == ')') {
-                bracketIndexes[1] = i
                 texText += text[i]
                 texText += '}'
             } else {texText += text[i]}
         }
-        texText = '$'+texText.replace('*', "\\times")+'$'
-        console.log(texText)
+        // Add the $$ TeX identifier and replace * symbol for TeX times symbol
+        texText = '$'+texText.replace('*', "\\times ")+'$'
         return texText
     }
 
