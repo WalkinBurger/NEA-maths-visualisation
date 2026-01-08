@@ -150,14 +150,24 @@
 
     function typesetInput(text) {
         if (text == '') {return "$\\dots$"}
-        if (text.indexOf('/') == -1) {return '$'+text.replace('*',"\\times")+'$'}
+        if (text.indexOf('/') != -1) {return '$'+text.replace('*',"\\times")+'$'}
         let bracketIndexes = [0,0]
+        let texText = ''
         for (i=0;i<text.length;i++) {
-            if (text[i] == '(') {bracketIndexes[0] = i}                               
-            else if (text[i] == ')') {bracketIndexes[1] = i}                               
-               
+            if (text[i] == '(') {
+                bracketIndexes[0] = i
+                texText += '{'
+                texText += text[i]
+            }
+            else if (text[i] == ')') {
+                bracketIndexes[1] = i
+                texText += text[i]
+                texText += '}'
+            } else {texText += text[i]}
         }
-        return text
+        texText = '$'+texText.replace('*', "\\times")+'$'
+        console.log(texText)
+        return texText
     }
 
     function answerField(pick, questionDiv) {
