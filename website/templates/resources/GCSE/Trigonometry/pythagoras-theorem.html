@@ -94,6 +94,15 @@
     </div>
 </div>
 
+<div class="part">
+    <p class="text">
+        That means, we can express Pythagoras's theorem as $a^2+b^2=c^2$.
+    </p>
+    <svg id="svg9" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
+    <div class="continue-container">
+        <button type="button" class="button1" style="overflow: hidden;" onclick="continuePart(this)">Continue</button>
+    </div>
+</div>
 
 
 <script>
@@ -258,7 +267,9 @@
     // Insert eplanation & answer into text paragraph to verify
     explainField(pick, document.getElementById("explain2").querySelectorAll(".text"))
     
-
+    // Part 9
+    let svg9 = document.getElementById("svg9")
+    draw(svg9, sq6, dg.text('$$a^2').position(dg.V2(0,0)).fontsize(24), dg.textvar('b^2').position(dg.V2(2.75,0)).fontsize(24), dg.textvar('c^2').position(dg.V2(6,0)).fontsize(24))
 
     try{MathJax.typeset()} catch{}
 </script>
