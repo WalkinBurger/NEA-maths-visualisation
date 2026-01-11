@@ -12,6 +12,7 @@
     --invert: 0%;
     --contrast: 1;
     --border: none;
+    --mjx-fg-black: --hl4 !important;
 }
 
 /* ========== Base class selectors that would be use in most pages ========== */
@@ -549,24 +550,31 @@ div.responsive > div.expand {
     width: 60vw;
     min-width: 340px;
     max-width: 640px;
-    padding: 20px 20px;
+    padding: 10px 20px;
     margin: auto;
     text-align: justify;
 }
 .part {
-/*
+    border: 1px solid var(--hl1);
+    border-radius: 4px;
     margin: auto;
+    margin-bottom: 10px;
     opacity: 0;
     height: 0px;
-    */
     transition: opacity 0.3s;
     border-radius: 4px;
 }
 .choices-container {
     display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     justify-content: center;
     padding: 20px;
     gap: 20px;
+    width: 60vw;
+    min-width: 340px;
+    max-width: 640px;
+    margin: auto;
 }
 .continue-container {
     width: fit-content;
@@ -589,9 +597,9 @@ svg text {
     fill: var(--hl4) !important;
 }
 .mjx-selected {
-  outline: 1px solid var(--hl3) ! important;
+    outline: 1px solid var(--hl3) ! important;
 }
-rect[sre-highlighter-added]:has(+ .mjx-selected) {
-  stroke: 1px solid var(--hl3) ! important;
+g rect {
+    stroke: 1px solid var(--hl3) ! important;
+    background: var(--pc1) !important;
 }
-.mjx-selected mjx-c {color: var(--pc1) !important}
