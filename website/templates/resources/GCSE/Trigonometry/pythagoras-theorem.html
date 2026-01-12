@@ -179,7 +179,22 @@
     </div>
 </div>
 
+<div class="part">
+    <p class="text">We start with $4$ identical tirangles, all with side lengths $a$, $b$, & $c$ in the order of increasing lengths:</p>
+    <svg id="svg16" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
+    <div class="continue-container">
+        <button type="button" class="button1" style="overflow: hidden;" onclick="continuePart(this)">Continue</button>
+    </div>
+</div>
 
+<div class="part">
+    <p class="text">We can then rearrange these $4$ triangles in this shape to form a larger square like so:</p>
+    <svg id="svg17" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
+    <div id="control17" class="control-div"></div>
+    <div class="continue-container">
+        <button type="button" class="button1" style="overflow: hidden;" onclick="continuePart(this)">Continue</button>
+    </div>
+</div>
 
 <script>
     // Disable continue buttons that are in questions part
@@ -376,8 +391,30 @@
     // Insert eplanation & answer into text paragraph to verify
     explainField(pick, document.getElementById("explain3").querySelectorAll(".text"))
     
-
+    // Part 16
+    let svg16 = document.getElementById("svg16")
+    let tri16 = dg.distribute_horizontal([tri4.fill(color("pc3")), tri4.fill(color("pc3")), tri4.fill(color("pc3")), tri4.fill(color("pc3"))], 1)
+    let [a16,b16,c16] = [dg.textvar("a").position(dg.V2(-1.2,0)), dg.textvar("b").position(dg.V2(0,-1)), dg.textvar("c").position(dg.V2(0.1,0.2))]
+    draw(svg16, tri16, a16, b16, c16)
     
+    // Part 17
+    let svg17 = document.getElementById("svg17")
+    let control17 = document.getElementById("control17")
+    let int17 = new dg.Interactive(control17, svg17)
+    int17.draw_function = (inp) => {
+        let t = inp['t']
+        let tri17 = [
+            tri4.fill(color("pc3")).position(dg.V2(t,0)), 
+            tri4.fill(color("pc3")).position(dg.V2(3,0)), 
+            tri4.fill(color("pc3")).position(dg.V2(6,0)), 
+            tri4.fill(color("pc3")).position(dg.V2(9,0))
+        ]
+        tri17[0].position(dg.V2(t,0))
+        draw(svg17, dg.square(12).position(dg.V2(6,6)), tri17[0], tri17[1], tri17[2], tri17[3])
+    }
+    int17.slider('t', 0, 10, 0)
+    int17.draw()
+
     try{MathJax.typeset()} catch{}
 </script>
 {% endblock %}
