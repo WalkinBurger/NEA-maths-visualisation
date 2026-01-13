@@ -557,8 +557,10 @@ div.responsive > div.expand {
     border-radius: 4px;
     margin: auto;
     margin-bottom: 10px;
+    /*
     opacity: 0;
     height: 0px;
+    */
     transition: opacity 0.3s;
     border-radius: 4px;
 }
