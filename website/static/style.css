@@ -480,7 +480,6 @@ div.responsive > div.expand {
 }
 .help-text {
     display: block;
-    text-align: justify;
     gap: 0;
     margin: 1em 0;
 }
@@ -552,7 +551,6 @@ div.responsive > div.expand {
     max-width: 640px;
     padding: 10px 20px;
     margin: auto;
-    text-align: justify;
 }
 .part {
     border: 1px solid var(--hl1);
@@ -584,6 +582,9 @@ div.responsive > div.expand {
     margin: auto;
     justify-content: center;
     transition: height 0.3s;
+}
+.control-div {
+    padding: 20px;
 }
 .diagramatics-slider-playbutton,
 .diagramatics-slider::-webkit-slider-thumb,
