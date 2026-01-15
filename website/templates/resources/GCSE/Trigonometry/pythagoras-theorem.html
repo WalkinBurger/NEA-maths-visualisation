@@ -206,7 +206,7 @@
 </div>
 
 <div class="part">
-    <p class="text">We can also rearrange the 4 triangles to form another similar larger square like such:</p>
+    <p class="text">We can also rearrange the $4$ triangles to form another similar larger square like such:</p>
     <svg id="svg19" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
     <div id="control19" class="control-div">Click to play animation:</div>
     <div class="continue-container">
@@ -214,6 +214,26 @@
     </div>
 </div>
 
+<div class="part">
+    <p class="text">And in the same way that we can work out the area of the $2$ smaller squares in the previous arrangment 
+        to be $a^2$ & $b^2$, we can also work out the area of this single empty square in this current arrangment, which turns 
+        out to be $c^2$.</p>
+    <svg id="svg20" class="svg-diagram" style="height: 90vw;"></svg> <!-- Visual diagram -->
+    <div class="continue-container">
+        <button type="button" class="button1" style="overflow: hidden;" onclick="continuePart(this)">Continue</button>
+    </div>
+</div>
+
+<div class="part">
+    <p class="text">Now here comes the proof! Because both of these larger squares arrangements are made with the <b>same $4$ identical triangles, </b>
+        and that we know the side lengths of both of them are $(a+b)$ because of that:</p>
+    <svg id="svg21" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
+    <p class="text">Hence it must be true that the <b>empty space</b> within these 2 square arrangements are <b>equal</b>&mdash;which we have shown to be 
+        $a^2$ & $b^2$ in the first arrangement, and $c^2$ in the second one; thus <b>proofing</b> the theorem: $$a^2+b^2=c^2$$</p>
+    <div class="continue-container">
+        <button type="button" class="button1" style="overflow: hidden;" onclick="continuePart(this)">Continue</button>
+    </div>
+</div>
 
 
 
@@ -499,8 +519,48 @@
     int19.slider('t', 0, 10, 0, 0.01)
     int19.draw()
 
+    // Part 20
+    let svg20 = document.getElementById("svg20")
+    let tri20 = dg.diagram_combine(
+        tri4.fill(color("pc3")).position(dg.V2(-0.75,-1)), 
+        tri4.fill(color("pc3")).position(dg.V2(0.75,1)).rotate(Math.PI), 
+        tri4.fill(color("pc3")).rotate(Math.PI*0.5).position(dg.V2(1,-0.75)),
+        tri4.fill(color("pc3")).rotate(Math.PI*1.5).position(dg.V2(-1,0.75)),
+        dg.square(2.4).apply(sqStyle).position(dg.V2(0,0)).rotate(-Math.asin(0.6))
+    )
+    let text20 = dg.diagram_combine(
+        dg.textvar("$ \\Downarrow $").fontsize(40),
+        dg.annotation.length(dg.V2(-1.75,3), dg.V2(0.25,1.5), 'c', -0.15, 0.1, -0.4).stroke(color("pc1")).fontsize(20),
+        dg.annotation.length(dg.V2(0.25,1.5), dg.V2(1.75,3.5), 'c', -0.15, 0.1, -0.4).stroke(color("pc1")).fontsize(20),
+        dg.textvar("$c^2$").fontsize(24).position(dg.V2(0,-2.75)),
+    )
+    draw(svg20, bounding(6,12), tri20.position(dg.V2(-0.75,2.25)), tri20.position(dg.V2(-0.75,-3.75)), text20)
 
-
+    // Part 21
+    let svg21 = document.getElementById("svg21")
+    let tri21 = dg.diagram_combine(
+        tri4.fill(color("pc3")).position(dg.V2(-3.25,-1)), 
+        tri4.fill(color("pc3")).position(dg.V2(-3.25,-1)).rotate(Math.PI), 
+        tri4.fill(color("pc3")).rotate(Math.PI*0.5).position(dg.V2(-1.5,0.75)),
+        tri4.fill(color("pc3")).rotate(Math.PI*1.5).position(dg.V2(-1.5,0.75)),
+        dg.square(2).apply(sqStyle).position(dg.V2(-3.25,0.75)),
+        dg.square(1.5).apply(sqStyle).position(dg.V2(-1.5,-1)),
+        tri4.fill(color("pc3")).position(dg.V2(1.75,-1)), 
+        tri4.fill(color("pc3")).position(dg.V2(3.25,1)).rotate(Math.PI), 
+        tri4.fill(color("pc3")).rotate(Math.PI*0.5).position(dg.V2(3.5,-0.75)),
+        tri4.fill(color("pc3")).rotate(Math.PI*1.5).position(dg.V2(1.5,0.75)),
+        dg.square(2.4).apply(sqStyle).position(dg.V2(2.5,0)).rotate(-Math.asin(0.6))
+    )
+    let text21 = dg.diagram_combine(
+        dg.annotation.length(dg.V2(-4.25,-1.75), dg.V2(-0.75,-1.75), '(a+b)', 0.15, 0.1, 0.4).stroke(color("pc1")).fontsize(20),
+        dg.annotation.length(dg.V2(-4.25,-1.75), dg.V2(-4.25,1.75), '(a+b)', -0.15, 0.1, -0.8).stroke(color("pc1")).fontsize(20),
+        dg.annotation.length(dg.V2(4.25,-1.75), dg.V2(0.75,-1.75), '(a+b)', -0.15, 0.1, -0.4).stroke(color("pc1")).fontsize(20),
+        dg.annotation.length(dg.V2(4.25,-1.75), dg.V2(4.25,1.75), '(a+b)', 0.15, 0.1, 0.8).stroke(color("pc1")).fontsize(20),
+        dg.textvar("$a^2$").fontsize(24).position(dg.V2(-1.5,-1)),
+        dg.textvar("$b^2$").fontsize(24).position(dg.V2(-3.25,0.75)),
+        dg.textvar("$c^2$").fontsize(24).position(dg.V2(2.5,0)),
+    )
+    draw(svg21, bounding(11,5), tri21, text21)
     try{MathJax.typeset()} catch{}
 </script>
 {% endblock %}
