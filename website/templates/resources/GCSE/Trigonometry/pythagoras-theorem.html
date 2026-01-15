@@ -205,6 +205,15 @@
     </div>
 </div>
 
+<div class="part">
+    <p class="text">We can also rearrange the 4 triangles to form another similar larger square like such:</p>
+    <svg id="svg19" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
+    <div id="control19" class="control-div">Click to play animation:</div>
+    <div class="continue-container">
+        <button type="button" class="button1" style="overflow: hidden;" onclick="continuePart(this)">Continue</button>
+    </div>
+</div>
+
 
 
 
@@ -461,6 +470,37 @@
     )
     draw(svg18, bounding(6,12), text18, tri18.position(dg.V2(-0.75,2.25)), tri18.position(dg.V2(-0.75,-3.75)))
     
+    // Part 19
+    let svg19 = document.getElementById("svg19")
+    let control19 = document.getElementById("control19")
+    let int19 = new dg.Interactive(control19, svg19)
+    int19.draw_function = (inp) => {
+        let t = inp['t']
+        let tri19 = [
+            dg.diagram_combine(
+                tri4.fill(color("pc3")).position(dg.V2(-0.75-2.5*timing(t,1,2),-1)), 
+                tri4.fill(color("pc3")).position(dg.V2(-0.75-2.5*timing(t,1,2),-1)).rotate(Math.PI), 
+                tri4.fill(color("pc3")).rotate(Math.PI*0.5).position(dg.V2(1-2.5*timing(t,1,2),0.75)),
+                tri4.fill(color("pc3")).rotate(Math.PI*1.5).position(dg.V2(1-2.5*timing(t,1,2),0.75)),
+                dg.square(2).apply(sqStyle).position(dg.V2(-0.75-2.5*timing(t,1,2),0.75)),
+                dg.square(1.5).apply(sqStyle).position(dg.V2(1-2.5*timing(t,1,2),-1))
+            ),
+            dg.diagram_combine(
+                tri4.fill(color("pc3")).position(dg.V2(-0.75+2.5*timing(t,1,2),-1)), 
+                tri4.fill(color("pc3")).position(dg.V2(-0.75+2.5*timing(t,1,2)+1.5*timing(t,5.5,7),-1+2*timing(t,5.5,7))).rotate(Math.PI), 
+                tri4.fill(color("pc3")).rotate(Math.PI*0.5).position(dg.V2(1+2.5*timing(t,1,2),0.75-1.5*timing(t,2.5,4))),
+                tri4.fill(color("pc3")).rotate(Math.PI*1.5).position(dg.V2(1+2.5*timing(t,1,2)-2*timing(t,4,5.5),0.75)),
+                dg.square(2.4).apply(sqStyle).position(dg.V2(2.5*timing(t,3,4),0)).rotate(-Math.asin(0.6)).opacity(timing(t,7,8)),
+            )
+        ]
+        draw(svg19,  bounding(5+(6*timing(t,1,2)),5), tri19[0], tri19[1])
+    }
+    // Input slider
+    int19.slider('t', 0, 10, 0, 0.01)
+    int19.draw()
+
+
+
     try{MathJax.typeset()} catch{}
 </script>
 {% endblock %}
