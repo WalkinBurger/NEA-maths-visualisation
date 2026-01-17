@@ -120,8 +120,7 @@
     <svg id="svg11" class="svg-diagram" style="height: 30vw;"></svg> <!-- Visual diagram -->
     <p class="text">
         We can work out the length $x$ by using the theorem:
-        $$x^2+12^2=13^2$$
-        And simply solve for $x$ afterwards:
+        $$x^2+12^2=13^2$$ And simply solve for $x$ afterwards:
         $$x^2=13^2-12^2$$
         $$x^2=169-144$$
         $$x^2=25$$
@@ -238,6 +237,12 @@
 
 
 <script>
+    // Remove questions if disabled
+    {% if session.get("questionsDisabled") %}
+    let questionParts = document.querySelectorAll(`[id^="slot"], [id^="explain"]`)
+    for (i=0; i<questionParts.length; i++) {questionParts[i].remove()}
+    {% endif %}
+
     // Disable continue buttons that are in questions part
     let continues = document.getElementsByClassName("continue-container")
     for (let i=0;i<continues.length;i++) {
@@ -360,15 +365,17 @@
     draw(svg1, bounding(3,3), tri1, ang1, ann1)
     
     // Part 2
-    var pick = pickQuestion(1)
     let svg2 = document.getElementById("svg2")
-    let question1 = document.getElementById("question1")
-    answerField(pick, question1)
-    draw(svg2, ...eval(`questions.${pick[1]}()`))
+    if (svg2) {
+        var pick = pickQuestion(1)
+        let question1 = document.getElementById("question1")
+        answerField(pick, question1)
+        draw(svg2, ...eval(`questions.${pick[1]}()`))
     
-    // Part 3
-    // Insert eplanation & answer into text paragraph to verify
-    explainField(pick, document.getElementById("explain1").querySelectorAll(".text"))
+        // Part 3
+        // Insert eplanation & answer into text paragraph to verify
+        explainField(pick, document.getElementById("explain1").querySelectorAll(".text"))
+    }
     
     // Part 4
     let svg4 = document.getElementById("svg4")
@@ -403,16 +410,17 @@
     draw(svg6, sq6, a6, b6, c6, text6[0], text6[1]  )
 
     // Part 7
-    var pick = pickQuestion(2)
     let svg7 = document.getElementById("svg7")
-    let question2 = document.getElementById("question2")
-    answerField(pick, question2)
-    draw(svg7, ...eval(`questions.${pick[1]}()`))
-    
-    // Part 8
-    // Insert eplanation & answer into text paragraph to verify
-    explainField(pick, document.getElementById("explain2").querySelectorAll(".text"))
-    
+    if (svg7) {
+        var pick = pickQuestion(2)
+        let question2 = document.getElementById("question2")
+        answerField(pick, question2)
+        draw(svg7, ...eval(`questions.${pick[1]}()`))
+        
+        // Part 8
+        // Insert eplanation & answer into text paragraph to verify
+        explainField(pick, document.getElementById("explain2").querySelectorAll(".text"))
+    }
     // Part 9
     let svg9 = document.getElementById("svg9")
     draw(svg9, sq6, text6[0], text6[1], dg.textvar('$a^2$').position(dg.V2(0,0)).fontsize(24),
@@ -429,15 +437,17 @@
     draw(svg12, bounding(3,3), tri12, a12.fontsize(24),b12.fontsize(24),c12.fontsize(24))
     
     // Part 13
-    var pick = pickQuestion(3)
     let svg13 = document.getElementById("svg13")
-    let question3 = document.getElementById("question3")
-    answerField(pick, question3)
-    draw(svg13, ...eval(`questions.${pick[1]}()`))
-    
-    // Part 14
-    // Insert eplanation & answer into text paragraph to verify
-    explainField(pick, document.getElementById("explain3").querySelectorAll(".text"))
+    if (svg13) {
+        var pick = pickQuestion(3)
+        let question3 = document.getElementById("question3")
+        answerField(pick, question3)
+        draw(svg13, ...eval(`questions.${pick[1]}()`))
+        
+        // Part 14
+        // Insert eplanation & answer into text paragraph to verify
+        explainField(pick, document.getElementById("explain3").querySelectorAll(".text"))
+    }
     
     // Part 16
     let svg16 = document.getElementById("svg16")
