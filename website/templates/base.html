@@ -18,7 +18,7 @@
     <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-svg.js" defer></script>
     {% endif %}
 </head>
-<body onload="loadContainer()">
+<body {%if resource is defined%}onresize="resize()"{%endif%} onload="loadContainer()">
     <!--The navigation bar at the top of the page-->
     <div class="nav" id="navBar">
         <div class="expand">
@@ -28,6 +28,9 @@
             {% endif %}
             <a href="/settings" title="Settings page">Settings</a>
             <a href="/help" title="Help page">Help</a>
+            {%if user.role == "student"%}
+            <a href="/progress" title="Progress page">Progress</a>
+            {% endif %}
         </div>
         <button class="home" type="image" onclick="location.href='/'" title="Home page"></button>
         <button class="menu"title="Expand Menu" onclick="expandMenu()"><div class="menu-bar"></div><div class="menu-bar"></div><div class="menu-bar"></div></button>    
@@ -107,5 +110,284 @@
         document.documentElement.style.setProperty('--contrast', '2');
     </script>
     {% endif %}
+
+    <!-- For resource pages -->
+    {%if resource is defined%}
+    {% if user.role == "teacher" %}
+    <div id="annotate">
+        <button type="button" class="button1" id="annotate-button" onclick="openAnn(this)">Annotate</button>
+        <div id="annotate-options">
+            <button type="button" class="button1" onclick="chooseAnn(this)">Label</button>
+            <button type="button" class="button1" onclick="chooseAnn(this)">Move</button>
+            <button type="button" class="button1" onclick="chooseAnn(this)">Delete</button>
+        </div>
+    </div>
+    {% endif %}
+    <script>
+        {% if user.role == "teacher" %}
+        // Remove questions if disabled
+        {% if session.get("questionsDisabled") %}
+        let questionParts = document.querySelectorAll(`[id^="slot"], [id^="explain"]`)
+        for (i=0; i<questionParts.length; i++) {questionParts[i].remove()}
+        {% endif %}
+
+        // Annotation
+
+        // Label
+        function label(e) {
+            elems = document.elementsFromPoint(e.clientX, e.clientY)
+            for (i=0; i<elems.length; i++) {if (elems[i].tagName == "BUTTON") {return}}
+            // Create label input
+            let annLabel = document.createElement("input")
+            annLabel.placeholder = "Enter label..."
+            annLabel.classList += "annLabel"
+            document.getElementsByTagName("body")[0].appendChild(annLabel)
+            annLabel.style.top = e.pageY+"px"
+            annLabel.style.left = e.pageX+"px"
+            // Typeset label
+            annTex = document.createElement("label")
+            document.getElementsByTagName("body")[0].appendChild(annTex)
+            annTex.classList += "annTex"
+            annTex.style.position = "absolute"
+            annTex.style.top = (e.pageY+25)+"px"
+            annTex.style.left = e.pageX+"px"
+            annLabel.addEventListener("input", function() {
+                if (annLabel.value != "") {
+                    annLabel.style.border = "none"
+                    if (!/\d/.test(annLabel.value) && annLabel.value.includes(' ')) {
+                        annTex.innerHTML = annLabel.value
+                    } else {
+                        annTex.innerHTML = '$'+annLabel.value+'$'
+                        MathJax.typeset([annTex])
+                    }
+                } else {
+                    annLabel.style.border = "1px solid var(--pc2)"
+                    annTex.innerHTML = ""
+                }
+            })
+            // Remove input when done labeling
+            annLabel.addEventListener("blur", function(){
+                if (annLabel.value != '') {annLabel.remove()}
+            })
+            let options = document.querySelector("#annotate-options").children
+            for (i=0; i<options.length; i++) {options[i].classList.remove("active")}
+            document.removeEventListener("click", label)
+        }
+
+        // Move
+        let moving = false
+        function move(e) {
+            // Disable moving when mosue release
+            if (e.type == "mouseup") {moving = false}
+            //  Get label to move and its offset
+            else if (e.type == "mousedown") {
+                let elems = document.elementsFromPoint(e.clientX, e.clientY)
+                for (i=0; i<elems.length; i++) {
+                    if (elems[i].classList.contains("annTex")) {
+                        moving = [
+                            elems[i],
+                            e.pageX-parseInt(elems[i].style.left.replace("px",'')),
+                            e.pageY-parseInt(elems[i].style.top.replace("px",''))
+                        ]
+                        return
+                    }
+                }
+            // Move the label
+            } else if (moving != false) {
+                moving[0].style.left = (e.pageX-moving[1])+"px"
+                moving[0].style.top = (e.pageY-moving[2])+"px"
+            }
+        }
+
+        // Delete
+        function annDelete(e) {
+            let elems = document.elementsFromPoint(e.clientX, e.clientY)
+            for (i=0; i<elems.length; i++) {
+                if (elems[i].classList.contains("annTex") || elems[i].classList.contains("annLabel")) {
+                    elems[i].remove()
+                    return
+                }
+            }
+        }
+
+        // Choosing annotation option
+        async function chooseAnn(option) {
+            let options = document.getElementById("annotate-options").children
+            for (i=0; i<options.length; i++) {
+                if (options[i] == option) {option.classList.toggle("active")}
+                else {options[i].classList.remove("active")}
+            }
+            if (option.innerHTML == "Label") {
+                document.addEventListener("click", label, {passive: true})
+                document.removeEventListener("mousedown", move)
+                document.removeEventListener("mouseup", move)
+                document.removeEventListener("mousemove", move)
+                document.removeEventListener("mousedown", annDelete)
+            }
+            else if (option.innerHTML == "Move") {
+                document.addEventListener("mousedown", move, {passive: true})
+                document.addEventListener("mouseup", move, {passive: true})
+                document.addEventListener("mousemove", move, {passive: true})
+                document.removeEventListener("click", label)
+                document.removeEventListener("mousedown", annDelete)
+            }
+            else {
+                document.addEventListener("mousedown", annDelete, {passive: true})
+                document.removeEventListener("click", label)
+                document.removeEventListener("mousedown", move)
+                document.removeEventListener("mouseup", move)
+                document.removeEventListener("mousemove", move)
+            }
+        }
+        // Expanding annotation menu
+        function openAnn(button) {
+            if (button.innerHTML == "Annotate") {
+                button.innerHTML = "Close"
+                button.parentElement.style.height = "230px"
+            }
+            else {
+                button.innerHTML = "Annotate"
+                button.parentElement.style.height = "2em"
+                let options = button.parentElement.querySelector("#annotate-options").children
+                for (i=0; i<options.length; i++) {options[i].classList.remove("active")}
+                document.removeEventListener("click", label)
+                document.removeEventListener("mousedown", move)
+                document.removeEventListener("mouseup", move)
+                document.removeEventListener("mousemove", move)
+                document.removeEventListener("mousedown", annDelete)
+            }
+        }
+        {% endif %}
+        // Disable continue buttons that are in questions part
+        let continues = document.getElementsByClassName("continue-container")
+        for (let i=0;i<continues.length;i++) {
+            if (continues[i].parentElement.id.includes("slot")) {
+                continues[i].firstElementChild.disabled = true
+            }
+        }
+        
+        // Calculate the parts and questions amount
+        let totalParts = document.getElementsByClassName("part").length
+        let currentPart = 0
+        let totalQuestions = document.querySelectorAll(`[id^="slot"]`).length
+        let currentCorrect = 0
+
+        // Function for continue button to disprlay the next part
+        continuePart = async (button) => {
+            currentPart += 1
+            thisPart = button.parentElement.parentElement
+            let nextPart = thisPart.nextElementSibling
+            if (nextPart.querySelectorAll(".continue-container").length == 0) {
+                let nextButton = button.parentElement.cloneNode(true)
+                // Disable continue buttons that are in questions part
+                if (nextPart.id.includes("slot")) {
+                    nextButton.querySelector(".continue").disabled = true
+                }
+                nextPart.appendChild(nextButton)
+            }
+            
+            button.style.opacity = 0
+            button.style.transform = "translateY(-10px)"
+            button.parentElement.style.height = 0
+            let response = null
+            // If part is question
+            if (thisPart.id.includes("slot")) {
+                let choices = thisPart.getElementsByClassName("choices-container")
+                let submit
+                for (let i=0;i<choices[0].children.length;i++) {
+                    choices[0].children[i].disabled = true
+                    if (choices[0].children[i].classList.contains("active")) {
+                        submit = choices[0].children[i]
+                    }
+                }
+                // Next part with explanation
+                let explain = document.getElementById("explain"+thisPart.id.slice(-1))
+                let answer = explain.querySelector(".text")
+                // Verify answer
+                let correct = false
+                let mjxMath = answer.querySelectorAll('[data-mml-node="math"]')
+                if (mjxMath.length != 0) {
+                    for (i=0;i<mjxMath.length;i++) {
+                        if (mjxMath[i].getAttribute("data-latex") == submit.querySelector('[data-mml-node="math"]').getAttribute("data-latex")) {
+                            correct = true
+                            response = '$'+mjxMath[i].getAttribute("data-latex")+'$'
+                            break
+                        }
+                        response = mjxMath[i].getAttribute("data-latex")
+                    }
+                } else {
+                    response = submit.innerHTML
+                    if (submit.innerHTML == answer.innerHTML.split('<b>[mark] Answer : </b>')[1]) {correct = true}
+                }
+                if (correct == true) {
+                    // Correct answer
+                    explain.style.backgroundColor = "var(--pc3)"
+                    answer.innerHTML = answer.innerHTML.replace("[mark]","&#x2714;")
+                    currentCorrect += 1
+                } else {
+                    // Wrong answer
+                    explain.style.backgroundColor = "var(--pink)"
+                    answer.innerHTML = answer.innerHTML.replace("[mark]","&#x2718;")
+                }
+            }
+
+            // Show next part
+            nextPart.style.height = nextPart.scrollHeight+"px"
+            nextPart.style.opacity = 1
+
+            // Post repsonses
+            {% if user.role == "student" %}
+            let postResponse = new FormData
+            postResponse.set("response", "hi")
+            await fetch(document.location.href, {
+                method: "POST",
+                body: JSON.stringify({
+                    completion: currentPart/totalParts, 
+                    accuracy: currentCorrect/totalQuestions,
+                    question:[button.parentElement.parentElement.dataset.questionId, response]
+                })
+            })
+            {% endif %}
+
+            if (button.innerHTML == "Finish") {
+                window.location.href = "/"
+                return
+            }
+            await delay(300)
+            button.parentElement.remove()
+        }
+
+        function answerField(pick, questionDiv) {
+            questionDiv.parentElement.dataset.questionId = pick[0]
+            let choices = pick[3].split('|')
+            for (let i=0;i<choices.length;i++) {
+                let button = document.createElement("button")
+                button.classList += "button1"
+                button.addEventListener('mousedown', function() {
+                    let buttons = button.parentElement.children
+                    for (let i=0;i<buttons.length;i++) {
+                        buttons[i].classList.remove("active")
+                    }
+                    button.classList.toggle("active")
+                    button.parentElement.parentElement.getElementsByClassName("continue-container")[0].children[0].disabled = false
+                })
+                button.innerHTML = choices[i]
+                questionDiv.appendChild(button)
+            }
+        }
+
+        function explainField(pick, explainDiv) { 
+            explainDiv[0].innerHTML += (pick[2]).replace('|', " or ")
+            explainDiv[1].innerHTML += pick[4]
+        }
+
+        function resize() {
+            let parts = document.getElementsByClassName("part")
+            for (i=0; i<parts.length; i++) {
+                parts[i].style.height = "fit-content"
+            }
+        }
+    </script>
+    {%endif%}
 </body>
 </html>

@@ -1,0 +1,48 @@
+{% extends "base.html" %} {%block title %}Progress{% endblock %}
+{% block content %}
+<!--The progress page-->
+<h1>Progress</h1>
+<hr>
+<div class="settings-containter">
+    <!-- Progress buttons -->
+    <button type="button" class="button1" onclick="expandhelp(this, 'exploredTopics')">Explored topics</button>
+    <button type="button" class="button1" onclick="expandhelp(this, 'attemptedQuestions')">Attempted questions</button>
+</div>
+<div class="settings" id="settings">
+    <div class="settings-div" id="exploredTopics">
+        <!-- Explored topics -->
+        {{progress}}
+    </div>
+    <div class="settings-div" id="attemptedQuestions">
+        <!-- Attempted questions -->
+        {{responses}}
+    </div>
+</div>
+{% if user.role != "anon" and user.role != "admin" %}<hr id="end-hr">{% else %}<hr>{% endif %}
+<script>    
+    // Function to expand content for the picked help option 
+    expandhelp = async (button, id) => {
+        settings = document.getElementById("settings").children
+        buttons = document.getElementsByClassName("button1")
+        hr = document.getElementById("end-hr")
+        for (let i = 0; i< buttons.length; i++) {
+            if (buttons[i] != button) {
+                buttons[i].classList.remove("active")
+            } else {button.classList.add("active")}
+        }
+        if (hr.style.width == "0px" || hr.style.width == "") {
+            hr.style.width = "100%"
+            await delay(200)
+        }
+        for (let i = 0; i < settings.length; i++) {
+            if (settings[i].id == id) {
+                settings[i].style.height = settings[i].scrollHeight + 'px'
+                settings[i].style.opacity = 1
+            } else {
+                settings[i].style.height = 0
+                settings[i].style.opacity = 0
+            }
+        }
+    }
+</script>
+{% endblock %}

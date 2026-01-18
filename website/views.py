@@ -6,6 +6,7 @@ import datetime
 import sys
 import os
 import pprint
+import json
 from argon2 import PasswordHasher, exceptions
 ph = PasswordHasher()
 
@@ -171,11 +172,24 @@ def logout():
     flash("You've logged out.", "success")
     return redirect(url_for("views.login"))
 
-@views.route("topic/<int:topicId>")
+@views.route("topic/<int:topicId>", methods=["GET", "POST"])
 @login_required
 def topic(topicId):
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
+    # POST request for updating the tables
+    if request.method == "POST":
+        response = json.loads(request.data)
+        completion = cursor.execute("SELECT completion FROM progress WHERE userId=? AND topicId=?",
+         (current_user.id, topicId,)).fetchone()
+        completion = [0] if completion == None else completion
+        cursor.execute("INSERT OR REPLACE INTO progress (completion, accuracy, userId, topicId) VALUES (?, ?, ?, ?)",
+         (max(response["completion"],float(completion[0])), response["accuracy"], current_user.id, topicId,))
+        if response["question"] != [None, None]:
+            cursor.execute("INSERT OR REPLACE INTO responses (submittedAnswer, userId, questionId) VALUES (?, ?, ?)",
+            (response["question"][1], current_user.id, response["question"][0],))
+        conn.commit()
+    # Directing to the topic resource page
     path = cursor.execute("SELECT path FROM topics WHERE topicId=?", (topicId,)).fetchone()[0]
     slots = cursor.execute("SELECT slotId FROM questionSlots WHERE topicId=?", (topicId,)).fetchall()
     questions = []
@@ -252,3 +266,12 @@ def settings():
                 session.pop("highContrast")
             flash("Appearance settings updated successfully", "success")
     return render_template("settings.html", user=current_user, session=session)
+
+@views.route("/progress")
+@role_required("student")
+def progress():
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+    responses = cursor.execute("SELECT submittedAnswer, questionId FROM responses WHERE userId=?",(current_user.id,)).fetchall()
+    progress = cursor.execute("SELECT completion, accuracy, topicId FROM progress WHERE userId=?",(current_user.id,)).fetchall()
+    return render_template("progress.html", user=current_user, session=session, responses=responses, progress=progress)

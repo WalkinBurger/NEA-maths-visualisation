@@ -45,6 +45,29 @@ def init_db():
             FOREIGN KEY(slotId) REFERENCES questionSlots(slotId)
         )
     ''')
+    # Progress table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS progress (
+            completion REAL NOT NULL,
+            accuracy REAL NOT NULL,
+            userId INTEGER,
+            topicId INTEGER,
+            FOREIGN KEY(userId) REFERENCES users(userId),
+            FOREIGN KEY(topicId) REFERENCES topics(topicId),
+            PRIMARY KEY(userId, topicId)
+        )
+    ''')
+    # Responses table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS responses (
+            submittedAnswer TEXT NOT NULL,
+            userId INTEGER,
+            questionId INTEGER,
+            FOREIGN KEY(userId) REFERENCES users(userId),
+            FOREIGN KEY(questionId) REFERENCES questions(questionId),
+            PRIMARY KEY(userId, questionId)
+        )
+    ''')
     conn.commit()
     conn.close()
 

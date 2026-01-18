@@ -561,6 +561,8 @@ div.responsive > div.expand {
     height: 0px;
     transition: opacity 0.3s;
     border-radius: 4px;
+    background-color: var(--bg);
+    filter: drop-shadow(0 3px 4px var(--hl2));
 }
 .choices-container {
     display: flex;
@@ -603,4 +605,43 @@ svg text {
 g rect {
     stroke: 1px solid var(--hl3) ! important;
     background: var(--pc1) !important;
+}
+#annotate {
+    position: sticky;
+    width: 120px;
+    height: 2em;
+    bottom: 10px;
+    margin: 10px;
+    border-radius: 4px;
+    background-color: var(--bg);
+    border: 1px solid var(--pc1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: height 0.3s ease-in-out;
+    filter: drop-shadow(0 3px 4px var(--hl2));
+}
+#annotate-options {
+    display: grid;
+    grid-template-columns: auto;
+    width: 90%;
+    height: 70%;
+    margin: 10px auto;
+    gap: 10px;
+}
+#annotate-button {
+    height: 50px;
+    width: 100%;
+    margin: 0 auto;
+    border: none;
+}
+.annLabel {
+    position: absolute;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 18px;
+    color: var(--hl3);
+    font-style: italic;
+    background: none;
+    border: 1px solid var(--pc2);
+    border-radius: 4px;
 }
