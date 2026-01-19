@@ -662,3 +662,23 @@ g rect {
     text-decoration: none;
 }
 .progress-container a:hover {text-decoration: underline;}
+
+
+
+
+/* ========== tutorial ========== */
+.tutorial-container{
+    position: absolute;
+    display: none;
+    grid-template-columns: auto;
+    gap: 20px;
+    padding: 20px;
+    background: var(--bg);
+    border-radius: 4px;
+    border: 2px solid var(--pc2);
+    filter: drop-shadow(0 2px 3px var(--hl3));
+    max-width: 300px;
+    opacity: 0;
+    transform: translate(-50%, 10px);
+    transition: opacity 0.3s, transform 0.5s;
+}

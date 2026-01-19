@@ -337,13 +337,11 @@
 
             // Post repsonses
             {% if user.role == "student" %}
-            let postResponse = new FormData
-            postResponse.set("response", "hi")
             await fetch(document.location.href, {
                 method: "POST",
                 body: JSON.stringify({
-                    completion: currentPart/totalParts, 
-                    accuracy: currentCorrect/totalQuestions,
+                    completion: Math.round((100*currentPart)/totalParts)/100, 
+                    accuracy: Math.round((100*currentCorrect)/totalQuestions)/100,
                     question:[button.parentElement.parentElement.dataset.questionId, response]
                 })
             })
@@ -389,5 +387,84 @@
         }
     </script>
     {%endif%}
+    
+    <!-- Tutorial -->
+    {% if tutorial == "ask" %} 
+    <div class="tutorial-container" style="top: 50%; left: 50%;">
+        Hi! Would you like to quicky go over the tutorial?
+        <div style="display: grid; grid-template-columns: 45% 45%; gap: 10px; justify-content: center;">
+            <button type="button" class="button1" onclick="tutorialNext(null, this.parentElement, '/?tutorial=true')">Yes</button>
+            <button type="button" class="button1" onclick="tutorialNext(null, this.parentElement, '/')">No</button>
+        </div>
+    </div>
+    {% elif tutorial == 1 %} 
+    <!-- Home page tutorial -->
+    <div class="tutorial-container" style="top: 50%; left: 50%;">
+        <p>This is the <b>home page</b>, where you could browse for all of the avaible topics of visualisation resources.</p>
+        <button type="button" class="button1" onclick="tutorialNext(this.parentElement.nextElementSibling, this.parentElement)">Next</button>
+    </div>
+    <div class="tutorial-container" style="top: 55%; left: 70%;">
+        <p>&larr; You can click on these tabs of topic categories to expand them, and find the resources you need.</p>
+        <button type="button" class="button1" onclick="tutorialNext(this.parentElement.nextElementSibling, this.parentElement)">Next</button>
+    </div>
+    <div class="tutorial-container" style="top: 50%; left: 50%;">
+        <p>&uarr; You can also directly search for specific topic with the search bar here.</p>
+        <button type="button" class="button1" onclick="tutorialNext(null, this.parentElement, '/topic/1?tutorial=true')">Next</button>
+    </div>
+    {% elif tutorial == 2 %}
+    <!-- Resource page tutorial -->
+    <div class="tutorial-container" style="top: 50%; left: 50%;">
+        <p>This is a topic <b>resource page</b>, you can learn about a maths concept or idea here with interactive visual diagrams & animations explained step-by-step.</p>
+        <button type="button" class="button1" onclick="document.getElementsByClassName('continue')[0].click();
+        tutorialNext(this.parentElement.nextElementSibling, this.parentElement)">Next</button>
+    </div>
+    <div class="tutorial-container" style="top: 40%; left: 50%;">
+        <p>There are also interactive <b>questions</b> throughout the resources like this one over here. &darr;</p>
+        <button type="button" class="button1" onclick="tutorialNext(null, this.parentElement, '/progress?tutorial=true')">Next</button>
+    </div>
+    {% elif tutorial == 3 %}
+    <!-- Progress page tutorial -->
+    <div class="tutorial-container" style="top: 80%; left: 50%;">
+        <p>This is the <b>progress page</b>, whenever you have explored a topic, your accuracy and completion of said topic would be displayed here as a feedback.</p>
+        <button type="button" class="button1" onclick="tutorialNext(null, this.parentElement, '/settings?tutorial=true')">Next</button>
+    </div>
+    {% elif tutorial == 4 %}
+    <!-- Settings page tutorial -->
+    <div class="tutorial-container" style="top: 50%; left: 50%;">
+        <p>This is the <b>settings page</b>, there are some accessiblity features you can configure with if you wish to do so.</p>
+        <button type="button" class="button1" onclick="tutorialNext(this.parentElement.nextElementSibling, this.parentElement)">Next</button>
+    </div>
+    <div class="tutorial-container" style="top: 10%; left: 50%;">
+        <p>Lastly this at the top here is the <b>navigation bar</b> &uarr;, you could click the icon at the top left to return to the home page, as well as some other pages featuring up here. </p>
+        <button type="button" class="button1" onclick="tutorialNext(this.parentElement.nextElementSibling, this.parentElement)">Next</button>
+    </div>
+    <div class="tutorial-container" style="top: 80%; left: 50%;">
+        <p>Thats it for the user tutorial! Feel free to explore around.</p>
+        <button type="button" class="button1" onclick="tutorialNext(null, this.parentElement, '/')">Finish</button>
+    </div>
+    {% endif %}
+    <!-- Script for tutorial -->
+    {% if tutorial != None %}
+    <script>
+        async function tutorialNext(next, current=null, nextPage=null) {
+            if (current) {
+                current.style.opacity = 0
+                current.style.transform = "translate(-50%, -10px)"
+                await delay(300)
+                current.remove()
+            }
+            if (nextPage) {document.location.href = nextPage}
+            next.style.display = "grid"
+            await delay(50)
+            next.style.opacity = 1
+            next.style.transform = "translate(-50%, 0px)"
+        }
+        async function firstTutorial() {
+            await delay(300)        
+            tutorialNext(document.getElementsByClassName("tutorial-container")[0])
+        }
+        firstTutorial()
+    </script>
+    {% endif %}
 </body>
 </html>

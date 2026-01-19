@@ -9,12 +9,14 @@
     <label>Completion:</label>
 </div>
 <hr>
+<!-- Where the actual progress table with be -->
 <div class="progress-container">
 </div>
 <script>
     let progress = {{progress|tojson}}
     let container = document.getElementsByClassName("progress-container")[1]
 
+    // Function to calculate the percentage and format the label and color for it
     function percentageCalc(i,j) {
         let div = document.createElement("div")
         let percentage = document.createElement("label")
@@ -29,13 +31,14 @@
         return div
     }
 
+    // Iterate through the table and create respective elements
     for (i=0; i<progress.length; i++) {
         let topic = document.createElement("a")
         topic.href = "/topic/"+progress[i][2]
         topic.innerHTML = progress[i][3]
         container.appendChild(topic)
         container.appendChild(percentageCalc(i,1))
-        container.appendChild(percentageCalc(i,2))
+        container.appendChild(percentageCalc(i,0))
     }
 </script>
 {% endblock %}

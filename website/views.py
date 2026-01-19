@@ -86,7 +86,9 @@ def home():
                 topics_flatten.append([topicName, i, topicId])
             elif not [category.replace('-', ' '), i] in topics_flatten:
                 topics_flatten.append([category.replace('-', ' '), i])
-    return render_template("index.html", user=current_user, session=session, user_type=user_type, topics=topics_flatten)
+    # Tutorial
+    tutorial = 1 if request.args.get("tutorial") == "true" else request.args.get("tutorial")
+    return render_template("index.html", user=current_user, session=session, user_type=user_type, topics=topics_flatten, tutorial=tutorial)
 
 @views.route("/login", methods=["GET", "POST"])
 def login():
@@ -162,7 +164,7 @@ def signup():
                 user = User(username=username)
                 login_user(user, remember=True)
                 flash("Account successfully created", category="success")
-                return redirect(url_for("views.home"))
+                return redirect(url_for("views.home", tutorial="ask"))
     return render_template("signup.html", user=current_user, session=session)
 
 @views.route("/logout")
@@ -198,7 +200,8 @@ def topic(topicId):
             questions.append(question)
     conn.close()
     questionsPath = os.path.relpath("website/static/questions.js", f"website/templates/resources/path")
-    return render_template(f"resources/{path}", user=current_user, session=session, resource=True, questions=questions, questionsPath=questionsPath)
+    tutorial = 2 if request.args.get("tutorial") == "true" else None
+    return render_template(f"resources/{path}", user=current_user, session=session, resource=True, questions=questions, questionsPath=questionsPath, tutorial=tutorial)
 
 @views.route("/dashboard")
 @login_required
@@ -265,9 +268,11 @@ def settings():
             elif session.get("highContrast"):
                 session.pop("highContrast")
             flash("Appearance settings updated successfully", "success")
-    return render_template("settings.html", user=current_user, session=session)
+    tutorial = 4 if request.args.get("tutorial") == "true" else None
+    return render_template("settings.html", user=current_user, session=session, tutorial=tutorial)
 
 @views.route("/progress")
+@login_required
 @role_required("student")
 def progress():
     conn = sqlite3.connect("database.db")
@@ -279,4 +284,5 @@ def progress():
         for j in topic:
             progress[i].append(j)
     conn.close()
-    return render_template("progress.html", user=current_user, session=session, progress=progress)
+    tutorial = 3 if request.args.get("tutorial") == "true" else None
+    return render_template("progress.html", user=current_user, session=session, progress=progress, tutorial=tutorial)
