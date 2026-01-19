@@ -9,6 +9,7 @@
     --hl4: #2a283e;
     --bg: #ffffff;
     --pink: #ebbcba;
+    --yellow: #f6c177;
     --invert: 0%;
     --contrast: 1;
     --border: none;
@@ -645,3 +646,19 @@ g rect {
     border: 1px solid var(--pc2);
     border-radius: 4px;
 }
+
+
+
+/* ========== progress page ========== */
+.progress-container {
+    display: grid;
+    width: 450px;
+    margin-top: 0.5em;
+    gap: 20px;
+    grid-template-columns: 200px 105px 105px;
+}
+.progress-container a {
+    color: var(--pc2);
+    text-decoration: none;
+}
+.progress-container a:hover {text-decoration: underline;}

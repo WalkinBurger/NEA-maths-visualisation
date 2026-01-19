@@ -272,6 +272,11 @@ def settings():
 def progress():
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
-    responses = cursor.execute("SELECT submittedAnswer, questionId FROM responses WHERE userId=?",(current_user.id,)).fetchall()
     progress = cursor.execute("SELECT completion, accuracy, topicId FROM progress WHERE userId=?",(current_user.id,)).fetchall()
-    return render_template("progress.html", user=current_user, session=session, responses=responses, progress=progress)
+    for i in range(len(progress)):
+        progress[i] = list(progress[i])
+        topic = cursor.execute("SELECT topicName FROM topics WHERE topicId=?", (progress[i][2],)).fetchone()
+        for j in topic:
+            progress[i].append(j)
+    conn.close()
+    return render_template("progress.html", user=current_user, session=session, progress=progress)
