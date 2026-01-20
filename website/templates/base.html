@@ -30,6 +30,8 @@
             <a href="/help" title="Help page">Help</a>
             {%if user.role == "student"%}
             <a href="/progress" title="Progress page">Progress</a>
+            {%elif user.role == "admin"%}
+            <a href="/dashboard" title="Progress page">Admin dashboard</a>
             {% endif %}
         </div>
         <button class="home" type="image" onclick="location.href='/'" title="Home page"></button>
@@ -403,7 +405,7 @@
         <p>This is the <b>home page</b>, where you could browse for all of the avaible topics of visualisation resources.</p>
         <button type="button" class="button1" onclick="tutorialNext(this.parentElement.nextElementSibling, this.parentElement)">Next</button>
     </div>
-    <div class="tutorial-container" style="top: 55%; left: 70%;">
+    <div class="tutorial-container" style="top: 75%; left: 70%;">
         <p>&larr; You can click on these tabs of topic categories to expand them, and find the resources you need.</p>
         <button type="button" class="button1" onclick="tutorialNext(this.parentElement.nextElementSibling, this.parentElement)">Next</button>
     </div>
@@ -434,7 +436,7 @@
         <p>This is the <b>settings page</b>, there are some accessiblity features you can configure with if you wish to do so.</p>
         <button type="button" class="button1" onclick="tutorialNext(this.parentElement.nextElementSibling, this.parentElement)">Next</button>
     </div>
-    <div class="tutorial-container" style="top: 10%; left: 50%;">
+    <div class="tutorial-container" style="top: 40%; left: 50%;">
         <p>Lastly this at the top here is the <b>navigation bar</b> &uarr;, you could click the icon at the top left to return to the home page, as well as some other pages featuring up here. </p>
         <button type="button" class="button1" onclick="tutorialNext(this.parentElement.nextElementSibling, this.parentElement)">Next</button>
     </div>
@@ -449,7 +451,7 @@
         async function tutorialNext(next, current=null, nextPage=null) {
             if (current) {
                 current.style.opacity = 0
-                current.style.transform = "translate(-50%, -10px)"
+                current.style.transform = "translate(-50%, -55%)"
                 await delay(300)
                 current.remove()
             }
@@ -457,7 +459,7 @@
             next.style.display = "grid"
             await delay(50)
             next.style.opacity = 1
-            next.style.transform = "translate(-50%, 0px)"
+            next.style.transform = "translate(-50%, -50%)"
         }
         async function firstTutorial() {
             await delay(300)        

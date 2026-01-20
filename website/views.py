@@ -207,7 +207,10 @@ def topic(topicId):
 @login_required
 @role_required("admin")
 def dashboard():
-    return render_template("dashboard.html", user=current_user, session=session)
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+    topics = cursor.execute("SELECT * FROM topics").fetchall()
+    return render_template("dashboard.html", user=current_user, session=session, topics=topics)
 
 @views.errorhandler(403)
 def error403(error):

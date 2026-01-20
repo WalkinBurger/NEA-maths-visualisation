@@ -1,5 +1,53 @@
-{% extends "base.html" %}{%block title %}dashboard{% endblock %}
+{% extends "base.html" %}{%block title %}Admin dashboard{% endblock %}
 {% block content %}
 <!-- The admin dashboard -->
 <h1>Admin dashboard</h1>
+<hr>
+<form style="display: grid; grid-template-columns: auto auto auto; gap: 20px; margin-bottom: 10px;">
+    <!-- Management buttons -->
+    <input type="button" class="button1" value="Add">
+    <input type="button" class="button1" value="Delete">
+    <input type="button" class="button1" value="Edit">
+</form>
+<input type="text" class="search" placeholder="&#8981;  Search topics" onkeyup="searchBar(this.value)">
+<!-- Display of all the topics resources  -->
+<div style="padding: 5px 10px; gap:10px; display: grid; grid-template-columns: 30px 180px 250px;">
+    <label style="text-align: center">ID</label>
+    <label style="text-align: center">Topic name</label>
+    <label style="text-align: center">Topic path</label>
+</div>
+<div id="dashboard-container">
+</div>
+
+<script>
+    let topics = {{topics|tojson}}
+    let container = document.getElementById("dashboard-container")
+
+    for (i=0; i<topics.length; i++) {
+        let resource = document.createElement("div")
+        for (j=0; j<topics[i].length; j++) {
+            let label = document.createElement("label")
+            label.innerHTML = topics[i][j]
+            resource.appendChild(label)
+        }
+        resource.addEventListener("click", function() {
+            let actives = container.getElementsByClassName("active")
+            for (i=0; i<actives.length; i++) {actives[i].classList -= "active"}
+            resource.classList += "active"
+        })
+        container.appendChild(resource)
+    }
+
+    function searchBar(value) {
+        let resources = container.children
+        for (i=0; i<resources.length; i++) {
+            if (resources[i].classList.contains("active")) {resources[i].classList -= "active"}
+            if (value == '') {resources[i].style.display = "grid"}
+            let labels = resources[i].children
+            if (!(labels[0].innerHTML+labels[2].innerHTML).toLowerCase().includes(value.toLowerCase())) {
+                resources[i].style.display = "none"
+            }
+        }
+    }
+</script>
 {% endblock %}

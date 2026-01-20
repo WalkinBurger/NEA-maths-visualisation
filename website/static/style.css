@@ -4,7 +4,7 @@
     --pc2: #56949f;
     --pc3: #9ccfd8;
     --hl1: #d9dce4;
-    --hl2: #dfdad9;
+    --hl2: #cecacd;
     --hl3: #575279;
     --hl4: #2a283e;
     --bg: #ffffff;
@@ -67,6 +67,7 @@ hr {
     justify-content: center;
     overflow-x: visible;
     padding: 4em 2em;
+    margin-bottom: 100px;
     transform: translateY(10px);
     transition: opacity 0.3s, transform 0.5s;
 }
@@ -393,6 +394,7 @@ div.responsive > div.expand {
     width: 100%;
     margin: auto;
     margin-bottom: 10px;
+    filter: drop-shadow(0 3px 4px var(--hl2));
 }
 .search:focus {
     filter: brightness(0.9);
@@ -679,6 +681,47 @@ g rect {
     filter: drop-shadow(0 2px 3px var(--hl3));
     max-width: 300px;
     opacity: 0;
-    transform: translate(-50%, 10px);
+    transform: translate(-50%, -45%);
     transition: opacity 0.3s, transform 0.5s;
 }
+
+
+
+/* ========== dashboard ========== */
+#dashboard-container {
+    display: grid;
+    grid-template-columns: auto;
+    grid-auto-rows: min-content;
+    overflow-y: scroll;
+    height: 600px;
+    width: 500px;
+    background-color: var(--hl1);
+    border-radius: 4px;
+    filter: drop-shadow(0 3px 4px var(--hl2));
+}
+
+#dashboard-container div {
+    padding: 5px 10px;
+    display: grid;
+    grid-template-columns: 30px 180px 250px;
+    gap: 10px;
+    border-bottom: 1px solid var(--hl2);
+    opacity: 1;
+    transition: background-color 0.1s, opacity 0.1s;
+}
+
+#dashboard-container div:hover {
+    background-color: var(--pc3);
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+#dashboard-container div:active {opacity: 0.5;}
+#dashboard-container div label {
+    margin: 5px;
+    height: fit-content
+}
+
+#dashboard-container div label:hover {cursor: pointer;}
+
+#dashboard-container div.active { background-color: var(--pc3); }
