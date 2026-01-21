@@ -693,7 +693,7 @@ g rect {
     grid-template-columns: auto;
     grid-auto-rows: min-content;
     overflow-y: scroll;
-    height: 600px;
+    height: 500px;
     width: 500px;
     background-color: var(--hl1);
     border-radius: 4px;
@@ -725,3 +725,30 @@ g rect {
 #dashboard-container div label:hover {cursor: pointer;}
 
 #dashboard-container div.active { background-color: var(--pc3); }
+
+#dashboard-popup {
+    position: absolute;
+    display: none;
+    grid-template-columns: auto auto;
+    gap: 20px;
+    padding: 20px;
+    background: var(--bg);
+    border-radius: 4px;
+    border: 2px solid var(--pc2);
+    filter: drop-shadow(0 2px 3px var(--hl3));
+    opacity: 0;
+    transform: translate(-50%, -45%);
+    transition: opacity 0.3s, transform 0.5s;
+    width: 400px;
+    top: 50%;
+    left: 50%;
+}
+
+#popup-container {
+    grid-column: 1 / span 2;
+}
+
+#popup-container div {
+    display: none;
+    gap: 5px;
+}

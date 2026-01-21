@@ -446,7 +446,7 @@
     </div>
     {% endif %}
     <!-- Script for tutorial -->
-    {% if tutorial != None %}
+    {% if tutorial %}
     <script>
         async function tutorialNext(next, current=null, nextPage=null) {
             if (current) {
@@ -456,10 +456,12 @@
                 current.remove()
             }
             if (nextPage) {document.location.href = nextPage}
-            next.style.display = "grid"
-            await delay(50)
-            next.style.opacity = 1
-            next.style.transform = "translate(-50%, -50%)"
+            if (next) {
+                next.style.display = "grid"
+                await delay(50)
+                next.style.opacity = 1
+                next.style.transform = "translate(-50%, -50%)"
+            }
         }
         async function firstTutorial() {
             await delay(300)        

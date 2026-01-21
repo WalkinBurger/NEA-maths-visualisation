@@ -203,15 +203,6 @@ def topic(topicId):
     tutorial = 2 if request.args.get("tutorial") == "true" else None
     return render_template(f"resources/{path}", user=current_user, session=session, resource=True, questions=questions, questionsPath=questionsPath, tutorial=tutorial)
 
-@views.route("/dashboard")
-@login_required
-@role_required("admin")
-def dashboard():
-    conn = sqlite3.connect("database.db")
-    cursor = conn.cursor()
-    topics = cursor.execute("SELECT * FROM topics").fetchall()
-    return render_template("dashboard.html", user=current_user, session=session, topics=topics)
-
 @views.errorhandler(403)
 def error403(error):
     return render_template("errors/403.html", user=current_user, session=session), 403
@@ -289,3 +280,14 @@ def progress():
     conn.close()
     tutorial = 3 if request.args.get("tutorial") == "true" else None
     return render_template("progress.html", user=current_user, session=session, progress=progress, tutorial=tutorial)
+
+@views.route("/dashboard", methods=["GET", "POST"])
+@login_required
+@role_required("admin")
+def dashboard():
+    if request.method == "POST":
+        sprint("hi")
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+    topics = cursor.execute("SELECT * FROM topics").fetchall()
+    return render_template("dashboard.html", user=current_user, session=session, topics=topics)
