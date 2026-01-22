@@ -201,7 +201,9 @@ def topic(topicId):
     conn.close()
     questionsPath = os.path.relpath("website/static/questions.js", f"website/templates/resources/path")
     tutorial = 2 if request.args.get("tutorial") == "true" else None
-    return render_template(f"resources/{path}", user=current_user, session=session, resource=True, questions=questions, questionsPath=questionsPath, tutorial=tutorial)
+    editing = True if request.args.get("editing") == "true" else False
+    return render_template(f"resources/{path}", user=current_user, session=session, resource=True, 
+        questions=questions, questionsPath=questionsPath, tutorial=tutorial, editing=editing)
 
 @views.errorhandler(403)
 def error403(error):
