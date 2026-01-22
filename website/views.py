@@ -201,9 +201,8 @@ def topic(topicId):
     conn.close()
     questionsPath = os.path.relpath("website/static/questions.js", f"website/templates/resources/path")
     tutorial = 2 if request.args.get("tutorial") == "true" else None
-    editing = True if request.args.get("editing") == "true" else False
     return render_template(f"resources/{path}", user=current_user, session=session, resource=True, 
-        questions=questions, questionsPath=questionsPath, tutorial=tutorial, editing=editing)
+        questions=questions, questionsPath=questionsPath, tutorial=tutorial)
 
 @views.errorhandler(403)
 def error403(error):
@@ -287,9 +286,26 @@ def progress():
 @login_required
 @role_required("admin")
 def dashboard():
-    if request.method == "POST":
-        sprint("hi")
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
     topics = cursor.execute("SELECT * FROM topics").fetchall()
+    # Update tables from requests
+    if request.method == "POST":
+        action = json.loads(request.data)
+        # Adding
+        if action["action"] == "add" and action["name"] != '' and action["path"] != '':
+            cursor.execute("INSERT INTO topics (topicName, path) VALUES (?, ?)",
+            (action["name"],action["path"],))
+            conn.commit()
+        # Deleteing
+        elif action["action"] == "delete":
+            cursor.execute("DELETE FROM topics WHERE topicId=?",(action["id"],))
+            conn.commit()
+        # Editing
+        else:
+            cursor.execute("UPDATE topics SET topicName=?, path=? WHERE topicId=?",
+            (action["name"],action["path"],action["id"],))
+            conn.commit()
+        conn.close()
+    conn.close()
     return render_template("dashboard.html", user=current_user, session=session, topics=topics)

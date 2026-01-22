@@ -751,4 +751,5 @@ g rect {
 #popup-container div {
     display: none;
     gap: 5px;
+    flex-direction: column;
 }
